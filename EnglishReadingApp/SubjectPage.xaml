@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EnglishReadingApp.SubjectPage"
+             Title="选择学科">
+
+    <Grid Padding="20" RowDefinitions="Auto,*,Auto">
+
+        <!-- 欢迎标题 -->
+        <Label Grid.Row="0" 
+               Text="选择要学习的科目" 
+               FontSize="24" 
+               FontAttributes="Bold"
+               HorizontalOptions="Center"
+               Margin="0,40,0,20"/>
+
+        <!-- 学科选项 -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="20" VerticalOptions="Center">
+
+                <!-- 语文（添加点击事件） -->
+                <Frame CornerRadius="20" 
+                       BackgroundColor="#FF6B6B"
+                       HasShadow="True">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnChineseClicked"/>
+                    </Frame.GestureRecognizers>
+                    <Grid ColumnDefinitions="Auto,*">
+                        <Image Source="chinese_icon.png" 
+                               HeightRequest="60" 
+                               WidthRequest="60"/>
+                        <VerticalStackLayout Grid.Column="1" 
+                                             Margin="15,0,0,0">
+                            <Label Text="语文" 
+                                   FontSize="22" 
+                                   FontAttributes="Bold"
+                                   TextColor="White"/>
+                            <Label Text="学习拼音、汉字、古诗词" 
+                                   FontSize="14" 
+                                   TextColor="White"
+                                   Opacity="0.9"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Frame>
+
+                <!-- 数学（添加点击事件） -->
+                <Frame CornerRadius="20" 
+                       BackgroundColor="#4ECDC4"
+                       HasShadow="True">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnMathClicked"/>
+                    </Frame.GestureRecognizers>
+                    <Grid ColumnDefinitions="Auto,*">
+                        <Image Source="math_icon.png" 
+                               HeightRequest="60" 
+                               WidthRequest="60"/>
+                        <VerticalStackLayout Grid.Column="1" 
+                                             Margin="15,0,0,0">
+                            <Label Text="数学" 
+                                   FontSize="22" 
+                                   FontAttributes="Bold"
+                                   TextColor="White"/>
+                            <Label Text="100以内加减法练习" 
+                                   FontSize="14" 
+                                   TextColor="White"
+                                   Opacity="0.9"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Frame>
+
+                <!-- 英语（添加点击事件） -->
+                <Frame CornerRadius="20" 
+                       BackgroundColor="#45B7D1"
+                       HasShadow="True">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnEnglishClicked"/>
+                    </Frame.GestureRecognizers>
+                    <Grid ColumnDefinitions="Auto,*">
+                        <Image Source="english_icon.png" 
+                               HeightRequest="60" 
+                               WidthRequest="60"/>
+                        <VerticalStackLayout Grid.Column="1" 
+                                             Margin="15,0,0,0">
+                            <Label Text="英语" 
+                                   FontSize="22" 
+                                   FontAttributes="Bold"
+                                   TextColor="White"/>
+                            <Label Text="跟读英语，智能语音识别" 
+                                   FontSize="14" 
+                                   TextColor="White"
+                                   Opacity="0.9"/>
+                        </VerticalStackLayout>
+                    </Grid>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- 退出按钮 -->
+        <Button Grid.Row="2" 
+                Text="退出"
+                BackgroundColor="#95A5A6"
+                TextColor="White"
+                CornerRadius="10"
+                HeightRequest="50"
+                Clicked="OnLogoutClicked"
+                Margin="0,20,0,20"/>
+
+    </Grid>
+</ContentPage>

@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EnglishReadingApp.ChinesePage"
+             Title="语文学习">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Picker 放在第一行 -->
+        <Picker x:Name="CategoryPicker" 
+                Grid.Row="0"
+                Title="选择学习类别"
+                SelectedIndexChanged="OnCategoryChanged"/>
+
+        <!-- 内容区域放在第二行 -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="20" Padding="20">
+
+                <!-- 当前学习内容 -->
+                <Frame BackgroundColor="#F0F3F8" 
+                       CornerRadius="15" 
+                       Padding="20">
+                    <Label x:Name="ContentLabel" 
+                           FontSize="28" 
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center"
+                           TextColor="#2C3E50"/>
+                </Frame>
+
+                <!-- 拼音标注（仅拼音模式） -->
+                <Label x:Name="PinyinLabel" 
+                       FontSize="16" 
+                       HorizontalOptions="Center"
+                       TextColor="#7F8C8D"
+                       IsVisible="False"/>
+
+                <!-- 解释说明 -->
+                <Label x:Name="ExplanationLabel" 
+                       FontSize="14" 
+                       HorizontalOptions="Center"
+                       TextColor="#7F8C8D"
+                       IsVisible="False"/>
+
+                <!-- 听发音按钮 -->
+                <Button x:Name="SpeakButton" 
+                        Text="🔊 听标准发音"
+                        BackgroundColor="#3498DB"
+                        TextColor="White"
+                        CornerRadius="10"
+                        HeightRequest="55"
+                        Clicked="OnSpeakClicked"/>
+
+                <!-- 开始跟读按钮 -->
+                <Button x:Name="RecordButton" 
+                        Text="🎤 开始跟读"
+                        BackgroundColor="#27AE60"
+                        TextColor="White"
+                        CornerRadius="10"
+                        HeightRequest="55"
+                        Clicked="OnRecordClicked"/>
+
+                <!-- 显示识别结果 -->
+                <Frame x:Name="ResultFrame" 
+                       BackgroundColor="#FFF3E0" 
+                       CornerRadius="10" 
+                       Padding="15"
+                       IsVisible="False">
+                    <Label x:Name="RecognizedTextLabel" 
+                           FontSize="16" 
+                           TextColor="#E67E22"/>
+                </Frame>
+
+                <!-- 评分结果 -->
+                <Frame x:Name="ScoreFrame" 
+                       BackgroundColor="#E8F8F5" 
+                       CornerRadius="10" 
+                       Padding="15"
+                       IsVisible="False">
+                    <Label x:Name="ScoreLabel" 
+                           FontSize="18" 
+                           FontAttributes="Bold"
+                           HorizontalTextAlignment="Center"/>
+                </Frame>
+
+                <!-- 下一题按钮 -->
+                <Button x:Name="NextButton" 
+                        Text="➡️ 下一题"
+                        BackgroundColor="#9B59B6"
+                        TextColor="White"
+                        CornerRadius="10"
+                        HeightRequest="50"
+                        IsVisible="False"
+                        Clicked="OnNextClicked"/>
+
+                <ActivityIndicator x:Name="LoadingIndicator" 
+                                   IsVisible="False"
+                                   Color="#3498DB"/>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EnglishReadingApp.MathPage"
+             Title="数学学习 - 100以内加减法">
+
+    <VerticalStackLayout Spacing="20" Padding="20" VerticalOptions="Center">
+
+        <!-- 题目显示 -->
+        <Frame BackgroundColor="#F0F3F8" 
+               CornerRadius="15" 
+               Padding="40">
+            <Label x:Name="QuestionLabel" 
+                   FontSize="42" 
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="#2C3E50"/>
+        </Frame>
+
+        <!-- 输入区域 -->
+        <Grid ColumnDefinitions="*,Auto,*">
+
+            <!-- 数字键盘 -->
+            <Frame Grid.Column="1" 
+                   BackgroundColor="#FFF" 
+                   CornerRadius="10"
+                   Padding="10">
+                <VerticalStackLayout Spacing="10">
+
+                    <!-- 第一行: 7 8 9 删除 -->
+                    <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                        <Button Text="7" Clicked="OnNumberClicked" WidthRequest="70" HeightRequest="60"/>
+                        <Button Text="8" Clicked="OnNumberClicked" WidthRequest="70" HeightRequest="60"/>
+                        <Button Text="9" Clicked="OnNumberClicked" WidthRequest="70" HeightRequest="60"/>
+                        <Button Text="⌫" Clicked="OnDeleteClicked" WidthRequest="70" HeightRequest="60" BackgroundColor="#E74C3C"/>
+                    </HorizontalStackLayout>
+
+                    <!-- 第二行: 4 5 6 清空 -->
+                    <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                        <Button Text="4" Clicked="OnNumberClicked" WidthRequest="70" HeightRequest="60"/>
+                        <Button Text="5" Clicked="OnNumberClicked" WidthRequest="70" HeightRequest="60"/>
+                        <Button Text="6" Clicked="OnNumberClicked" WidthRequest="70" HeightRequest="60"/>
+                        <Button Text="C" Clicked="OnClearClicked" WidthRequest="70" HeightRequest="60" BackgroundColor="#E67E22"/>
+                    </HorizontalStackLayout>
+
+                    <!-- 第三行: 1 2 3 -->
+                    <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                        <Button Text="1" Clicked="OnNumberClicked" WidthRequest="70" HeightRequest="60"/>
+                        <Button Text="2" Clicked="OnNumberClicked" WidthRequest="70" HeightRequest="60"/>
+                        <Button Text="3" Clicked="OnNumberClicked" WidthRequest="70" HeightRequest="60"/>
+                    </HorizontalStackLayout>
+
+                    <!-- 第四行: 0 提交 -->
+                    <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                        <Button Text="0" Clicked="OnNumberClicked" WidthRequest="110" HeightRequest="60"/>
+                        <Button Text="✓ 提交" Clicked="OnSubmitClicked" WidthRequest="170" HeightRequest="60" BackgroundColor="#27AE60"/>
+                    </HorizontalStackLayout>
+
+                </VerticalStackLayout>
+            </Frame>
+
+        </Grid>
+
+        <!-- 当前输入显示 -->
+        <Frame BackgroundColor="#FFF3E0" CornerRadius="10" Padding="15">
+            <Label x:Name="InputLabel" 
+                   Text="" 
+                   FontSize="24"
+                   HorizontalOptions="Center"
+                   TextColor="#E67E22"/>
+        </Frame>
+
+        <!-- 反馈信息 -->
+        <Label x:Name="FeedbackLabel" 
+               FontSize="16" 
+               HorizontalOptions="Center"
+               TextColor="#7F8C8D"/>
+
+        <!-- 下一题按钮 -->
+        <Button x:Name="NextButton" 
+                Text="➡️ 下一题"
+                BackgroundColor="#9B59B6"
+                TextColor="White"
+                CornerRadius="10"
+                HeightRequest="50"
+                IsVisible="False"
+                Clicked="OnNextQuestionClicked"/>
+
+        <!-- 统计 -->
+        <Frame BackgroundColor="#E8F8F5" CornerRadius="10" Padding="10">
+            <HorizontalStackLayout HorizontalOptions="Center" Spacing="20">
+                <Label Text="正确：" FontSize="14"/>
+                <Label x:Name="CorrectCountLabel" Text="0" FontSize="14" TextColor="#27AE60"/>
+                <Label Text="错误：" FontSize="14"/>
+                <Label x:Name="IncorrectCountLabel" Text="0" FontSize="14" TextColor="#E74C3C"/>
+            </HorizontalStackLayout>
+        </Frame>
+
+    </VerticalStackLayout>
+</ContentPage>

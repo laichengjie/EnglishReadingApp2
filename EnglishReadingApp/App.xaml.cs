@@ -15,6 +15,7 @@ public partial class App : Application
         };
 
         // 通过依赖注入获取 MainPage
-        MainPage = new NavigationPage(services.GetRequiredService<MainPage>());
+        //MainPage = new NavigationPage(services.GetRequiredService<MainPage>());
+        MainPage = new NavigationPage(services.GetRequiredService<SubjectPage>());
     }
 }

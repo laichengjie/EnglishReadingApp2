@@ -20,6 +20,10 @@ public static class MauiProgram
         // 注册服务
         builder.Services.AddSingleton(AudioManager.Current);  // 注册音频管理器
         builder.Services.AddTransient<MainPage>();            // 注册 MainPage
+        builder.Services.AddTransient<SubjectPage>();   
+        builder.Services.AddTransient<ChinesePage>();            
+        builder.Services.AddTransient<EnglishPage>();            
+        builder.Services.AddTransient<MathPage>();            
 
         // 可选：注册其他服务
         builder.Services.AddSingleton<IAudioManager>(AudioManager.Current);
