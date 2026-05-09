@@ -19,7 +19,7 @@ public partial class SubjectPage : ContentPage
 
     private async void OnEnglishClicked(object sender, EventArgs e)
     {
-        //await Navigation.PushAsync(new EnglishPage());
+        await Navigation.PushAsync(new EnglishPage());
     }
 
     private async void OnLogoutClicked(object sender, EventArgs e)

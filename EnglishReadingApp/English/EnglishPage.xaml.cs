@@ -11,11 +11,11 @@ namespace EnglishReadingApp
         private bool _isRecording = false;
         private CancellationTokenSource? _recordingCts;
 
-        public EnglishPage(IAudioManager audioManager)
+        public EnglishPage()
         {
             InitializeComponent();
-            _audioManager = audioManager;
-             
+            _audioManager = AudioManager.Current;
+
             // 页面卸载时释放资源
             this.Unloaded += OnPageUnloaded;
         }
