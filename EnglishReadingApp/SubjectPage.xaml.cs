@@ -28,7 +28,10 @@ public partial class SubjectPage : ContentPage
         if (confirm)
         {
             // 返回到登录页
-            await Navigation.PopToRootAsync();
+            //await Navigation.PopToRootAsync();
+
+            // 退出整个应用程序
+            Application.Current.Quit();
         }
     }
 }
