@@ -21,7 +21,9 @@ public static class MauiProgram
         builder.Services.AddSingleton(AudioManager.Current);  // 注册音频管理器
         builder.Services.AddTransient<MainPage>();            // 注册 MainPage
         builder.Services.AddTransient<SubjectPage>();   
-        builder.Services.AddTransient<ChinesePage>();            
+        builder.Services.AddTransient<ChinesePage>();
+        builder.Services.AddTransient<ChineseLearningPage>();
+        builder.Services.AddTransient<ChinesePinyinAlphabetPage>();
         builder.Services.AddTransient<EnglishPage>();            
         builder.Services.AddTransient<MathPage>();            
 

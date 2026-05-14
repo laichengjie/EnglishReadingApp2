@@ -9,7 +9,7 @@ public partial class SubjectPage : ContentPage
 
     private async void OnChineseClicked(object sender, EventArgs e)
     {
-        await Navigation.PushAsync(new ChinesePage());
+        await Navigation.PushAsync(new ChineseLearningPage());
     }
 
     private async void OnMathClicked(object sender, EventArgs e)

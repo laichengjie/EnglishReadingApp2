@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EnglishReadingApp.ChineseLearningPage"
+             Title="语文学习"
+             BackgroundColor="#F8F9FA">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- 顶部标题 -->
+        <VerticalStackLayout Grid.Row="0" 
+                             BackgroundColor="#FF6B6B"
+                             Padding="20"
+                             Spacing="5">
+            <Label Text="语文学习" 
+                   FontSize="24" 
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center"/>
+            <Label Text="拼音 · 词语 · 古诗 · 成语 · 短文" 
+                   FontSize="14" 
+                   TextColor="White"
+                   Opacity="0.9"
+                   HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+
+        <!-- 模块选择 -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="15" Padding="20" Margin="0,20,0,20">
+
+                <!-- 拼音学习（添加点击事件） -->
+                <Frame CornerRadius="15" 
+                       BackgroundColor="#FFEAA7"
+                       HasShadow="True"
+                       Padding="20">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnPinyinFrameTapped"/>
+                    </Frame.GestureRecognizers>
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Text="🎵" FontSize="30" VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" Margin="15,0,0,0">
+                            <Label Text="拼音学习" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                            <Label Text="学习拼音字母、声调、拼读规则" 
+                                   FontSize="13" 
+                                   TextColor="#7F8C8D"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" 
+                               Text="→" 
+                               FontSize="20" 
+                               TextColor="#FF6B6B"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Frame>
+
+                <!-- 词语学习（添加点击事件） -->
+                <Frame CornerRadius="15" 
+                       BackgroundColor="#B8E6FF"
+                       HasShadow="True"
+                       Padding="20">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnWordFrameTapped"/>
+                    </Frame.GestureRecognizers>
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Text="📖" FontSize="30" VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" Margin="15,0,0,0">
+                            <Label Text="词语学习" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                            <Label Text="学习常用词语、近义词、反义词" 
+                                   FontSize="13" 
+                                   TextColor="#7F8C8D"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" 
+                               Text="→" 
+                               FontSize="20" 
+                               TextColor="#4A90D9"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Frame>
+
+                <!-- 古诗词（添加点击事件） -->
+                <Frame CornerRadius="15" 
+                       BackgroundColor="#D5F4E6"
+                       HasShadow="True"
+                       Padding="20">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnPoetryFrameTapped"/>
+                    </Frame.GestureRecognizers>
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Text="📜" FontSize="30" VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" Margin="15,0,0,0">
+                            <Label Text="古诗词" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                            <Label Text="经典古诗词、背诵跟读" 
+                                   FontSize="13" 
+                                   TextColor="#7F8C8D"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" 
+                               Text="→" 
+                               FontSize="20" 
+                               TextColor="#27AE60"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Frame>
+
+                <!-- 成语学习（添加点击事件） -->
+                <Frame CornerRadius="15" 
+                       BackgroundColor="#FADBD8"
+                       HasShadow="True"
+                       Padding="20">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnIdiomFrameTapped"/>
+                    </Frame.GestureRecognizers>
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Text="🐉" FontSize="30" VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" Margin="15,0,0,0">
+                            <Label Text="成语学习" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                            <Label Text="学习成语故事、含义、用法" 
+                                   FontSize="13" 
+                                   TextColor="#7F8C8D"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" 
+                               Text="→" 
+                               FontSize="20" 
+                               TextColor="#E74C3C"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Frame>
+
+                <!-- 短文阅读（添加点击事件） -->
+                <Frame CornerRadius="15" 
+                       BackgroundColor="#E8DAEF"
+                       HasShadow="True"
+                       Padding="20">
+                    <Frame.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnArticleFrameTapped"/>
+                    </Frame.GestureRecognizers>
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Label Text="📰" FontSize="30" VerticalOptions="Center"/>
+                        <VerticalStackLayout Grid.Column="1" Margin="15,0,0,0">
+                            <Label Text="短文阅读" 
+                                   FontSize="18" 
+                                   FontAttributes="Bold"
+                                   TextColor="#2C3E50"/>
+                            <Label Text="精选短文、阅读理解" 
+                                   FontSize="13" 
+                                   TextColor="#7F8C8D"/>
+                        </VerticalStackLayout>
+                        <Label Grid.Column="2" 
+                               Text="→" 
+                               FontSize="20" 
+                               TextColor="#8E44AD"
+                               VerticalOptions="Center"/>
+                    </Grid>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

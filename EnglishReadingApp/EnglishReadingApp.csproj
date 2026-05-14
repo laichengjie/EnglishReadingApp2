@@ -87,6 +87,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Chinese\ChinesePinyinAlphabetPage.xaml.cs">
+	    <DependentUpon>ChinesePinyinAlphabetPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Chinese\ChineseLearningPage.xaml.cs">
+	    <DependentUpon>ChineseLearningPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Chinese\ChinesePage.xaml.cs">
 	    <DependentUpon>ChinesePage.xaml</DependentUpon>
 	  </Compile>
@@ -102,6 +108,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Chinese\ChinesePinyinAlphabetPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Chinese\ChineseLearningPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="English\EnglishPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
