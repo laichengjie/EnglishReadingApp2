@@ -2,7 +2,9 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EnglishReadingApp.ChinesePinyinAlphabetPage"
-             Title="汉语拼音字母表">
+             Title="汉语拼音字母表"
+             BackgroundColor="#F8F9FA">
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -16,7 +18,7 @@
                              Padding="20,15"
                              Spacing="5">
             <Label Text="汉语拼音字母表" 
-                   FontSize="22" 
+                   FontSize="24" 
                    FontAttributes="Bold"
                    TextColor="White"
                    HorizontalOptions="Center"/>
@@ -29,42 +31,45 @@
 
         <!-- 拼音内容区域 -->
         <ScrollView Grid.Row="1">
-            <VerticalStackLayout Spacing="15" Padding="15">
+            <VerticalStackLayout Spacing="12" Padding="12">
 
-                <!-- 连读按钮 -->
-                <HorizontalStackLayout Spacing="15" HorizontalOptions="Center" Margin="0,10">
-                    <Button Text="🔊 连读全部"
+                <!-- 连读按钮区域 -->
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10" Margin="0,5">
+                    <Button Grid.Column="0"
+                            Text="🔊 连读全部"
                             Clicked="OnReadAllClicked"
                             BackgroundColor="#27AE60"
                             TextColor="White"
                             CornerRadius="20"
-                            HeightRequest="45"
-                            FontSize="14"/>
-                    <Button Text="🔊 连读声母"
+                            HeightRequest="42"
+                            FontSize="13"/>
+                    <Button Grid.Column="1"
+                            Text="🔊 声母"
                             Clicked="OnReadInitialsClicked"
                             BackgroundColor="#3498DB"
                             TextColor="White"
                             CornerRadius="20"
-                            HeightRequest="45"
-                            FontSize="14"/>
-                    <Button Text="🔊 连读韵母"
+                            HeightRequest="42"
+                            FontSize="13"/>
+                    <Button Grid.Column="2"
+                            Text="🔊 韵母"
                             Clicked="OnReadFinalsClicked"
                             BackgroundColor="#9B59B6"
                             TextColor="White"
                             CornerRadius="20"
-                            HeightRequest="45"
-                            FontSize="14"/>
-                </HorizontalStackLayout>
+                            HeightRequest="42"
+                            FontSize="13"/>
+                </Grid>
 
                 <!-- 声母表 -->
-                <Frame CornerRadius="15"
+                <Frame CornerRadius="12"
                        BackgroundColor="White"
                        HasShadow="True"
-                       Padding="15"
-                       Margin="0,5">
-                    <VerticalStackLayout Spacing="10">
+                       Padding="12"
+                       Margin="0,3">
+                    <VerticalStackLayout Spacing="6">
                         <Label Text="📖 声母表（23个）" 
-                               FontSize="16" 
+                               FontSize="15" 
                                FontAttributes="Bold"
                                TextColor="#E74C3C"/>
                         <FlexLayout x:Name="InitialsFlex" 
@@ -75,14 +80,14 @@
                 </Frame>
 
                 <!-- 单韵母 -->
-                <Frame CornerRadius="15"
+                <Frame CornerRadius="12"
                        BackgroundColor="White"
                        HasShadow="True"
-                       Padding="15"
-                       Margin="0,5">
-                    <VerticalStackLayout Spacing="10">
+                       Padding="12"
+                       Margin="0,3">
+                    <VerticalStackLayout Spacing="6">
                         <Label Text="🎵 单韵母（6个）" 
-                               FontSize="16" 
+                               FontSize="15" 
                                FontAttributes="Bold"
                                TextColor="#E67E22"/>
                         <FlexLayout x:Name="SingleVowelsFlex" 
@@ -92,17 +97,18 @@
                     </VerticalStackLayout>
                 </Frame>
 
-                <!-- 复韵母 -->
-                <Frame CornerRadius="15"
+                <!-- 复韵母（合并为一个大组） -->
+                <Frame CornerRadius="12"
                        BackgroundColor="White"
                        HasShadow="True"
-                       Padding="15"
-                       Margin="0,5">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="🌈 复韵母（8个）" 
-                               FontSize="16" 
+                       Padding="12"
+                       Margin="0,3">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="🌈 复韵母（18个）" 
+                               FontSize="15" 
                                FontAttributes="Bold"
                                TextColor="#27AE60"/>
+                        <!-- 使用一个 FlexLayout 显示所有复韵母 -->
                         <FlexLayout x:Name="CompoundVowelsFlex" 
                                     Wrap="Wrap" 
                                     JustifyContent="Start"
@@ -110,51 +116,15 @@
                     </VerticalStackLayout>
                 </Frame>
 
-                <!-- 前鼻韵母 -->
-                <Frame CornerRadius="15"
-                       BackgroundColor="White"
-                       HasShadow="True"
-                       Padding="15"
-                       Margin="0,5">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="👃 前鼻韵母（5个）" 
-                               FontSize="16" 
-                               FontAttributes="Bold"
-                               TextColor="#2980B9"/>
-                        <FlexLayout x:Name="FrontNasalFlex" 
-                                    Wrap="Wrap" 
-                                    JustifyContent="Start"
-                                    AlignItems="Center"/>
-                    </VerticalStackLayout>
-                </Frame>
-
-                <!-- 后鼻韵母 -->
-                <Frame CornerRadius="15"
-                       BackgroundColor="White"
-                       HasShadow="True"
-                       Padding="15"
-                       Margin="0,5">
-                    <VerticalStackLayout Spacing="10">
-                        <Label Text="👅 后鼻韵母（4个）" 
-                               FontSize="16" 
-                               FontAttributes="Bold"
-                               TextColor="#8E44AD"/>
-                        <FlexLayout x:Name="BackNasalFlex" 
-                                    Wrap="Wrap" 
-                                    JustifyContent="Start"
-                                    AlignItems="Center"/>
-                    </VerticalStackLayout>
-                </Frame>
-
                 <!-- 整体认读音节 -->
-                <Frame CornerRadius="15"
+                <Frame CornerRadius="12"
                        BackgroundColor="White"
                        HasShadow="True"
-                       Padding="15"
-                       Margin="0,5">
-                    <VerticalStackLayout Spacing="10">
+                       Padding="12"
+                       Margin="0,3">
+                    <VerticalStackLayout Spacing="6">
                         <Label Text="📚 整体认读音节（16个）" 
-                               FontSize="16" 
+                               FontSize="15" 
                                FontAttributes="Bold"
                                TextColor="#16A085"/>
                         <FlexLayout x:Name="WholeSyllablesFlex" 
@@ -167,12 +137,22 @@
             </VerticalStackLayout>
         </ScrollView>
 
-        <!-- 底部加载指示器 -->
-        <ActivityIndicator Grid.Row="2" 
-                           x:Name="LoadingIndicator" 
-                           IsVisible="False" 
-                           Color="#FF6B6B"
-                           HorizontalOptions="Center"
-                           Margin="0,5"/>
+        <!-- 底部状态栏 -->
+        <VerticalStackLayout Grid.Row="2" 
+                             BackgroundColor="#F0F0F0"
+                             Padding="10"
+                             Spacing="2">
+            <Label x:Name="StatusLabel" 
+                   Text="共 63 个拼音 | 点击即可发音" 
+                   FontSize="12"
+                   TextColor="#666"
+                   HorizontalOptions="Center"/>
+            <ActivityIndicator x:Name="LoadingIndicator" 
+                               IsVisible="False" 
+                               Color="#FF6B6B"
+                               HorizontalOptions="Center"
+                               HeightRequest="20"/>
+        </VerticalStackLayout>
+
     </Grid>
 </ContentPage>
