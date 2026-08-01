@@ -184,44 +184,15 @@ public partial class ChinesePinyinAlphabetPage : ContentPage
         {
             LoadingIndicator.IsVisible = true;
             LoadingIndicator.IsRunning = true;
-
-            // 优先朗读汉字（发音更准确）
-            string speakText = item.Chinese;
-            System.Diagnostics.Debug.WriteLine($"朗读: {item.Pinyin} -> {speakText}");
-
-            // 使用阿里云 TTS 朗读汉字
-            var audioStream = await _qwenTTS.SpeakAsync(speakText, "CHERRY", "Chinese");
-
-            // 播放音频
-            var audioManager = AudioManager.Current;
-            var player = audioManager.CreatePlayer(audioStream);
-            player.Play();
-
-            // 等待播放完成
-            while (player.CurrentPosition < player.Duration)
+            await TextToSpeech.Default.SpeakAsync(item.Chinese, new SpeechOptions
             {
-                await Task.Delay(50);
-            }
-
-            player.Dispose();
+                Volume = 1.0f,
+                Pitch = 1.0f
+            });
         }
-        catch (Exception ex)
+        catch (Exception ttsEx)
         {
-            System.Diagnostics.Debug.WriteLine($"阿里 TTS 失败: {ex.Message}");
-
-            // 降级方案：使用系统 TTS
-            try
-            {
-                await TextToSpeech.Default.SpeakAsync(item.Chinese, new SpeechOptions
-                {
-                    Volume = 1.0f,
-                    Pitch = 1.0f
-                });
-            }
-            catch (Exception ttsEx)
-            {
-                await DisplayAlert("提示", $"无法发音: {ttsEx.Message}", "确定");
-            }
+            await DisplayAlert("提示", $"无法发音: {ttsEx.Message}", "确定");
         }
         finally
         {
@@ -239,37 +210,17 @@ public partial class ChinesePinyinAlphabetPage : ContentPage
 
             foreach (var item in itemList)
             {
-                var audioStream = await _qwenTTS.SpeakAsync(item.Chinese, "CHERRY", "Chinese");
-                var audioManager = AudioManager.Current;
-                var player = audioManager.CreatePlayer(audioStream);
-                player.Play();
-
-                while (player.CurrentPosition < player.Duration)
+                await TextToSpeech.Default.SpeakAsync(item.Chinese, new SpeechOptions
                 {
-                    await Task.Delay(50);
-                }
-                player.Dispose();
-
-                await Task.Delay(150);
+                    Volume = 1.0f,
+                    Pitch = 1.0f
+                });
+                await Task.Delay(50);
             }
         }
         catch (Exception ex)
         {
             System.Diagnostics.Debug.WriteLine($"批量发音失败: {ex.Message}");
-
-            // 降级方案
-            try
-            {
-                foreach (var item in itemList)
-                {
-                    await TextToSpeech.Default.SpeakAsync(item.Chinese);
-                    await Task.Delay(200);
-                }
-            }
-            catch (Exception innerEx)
-            {
-                await DisplayAlert("提示", $"发音失败: {innerEx.Message}", "确定");
-            }
         }
         finally
         {
@@ -302,78 +253,6 @@ public partial class ChinesePinyinAlphabetPage : ContentPage
         finals.AddRange(_wholeSyllables);
 
         await SpeakMultiplePinyin(finals);
-    }
-
-    // 批量下载所有拼音读音
-    private async Task BatchDownloadAllPinyinAsync()
-    {
-        var allItems = new List<PinyinItem>();
-        allItems.AddRange(_initials);
-        allItems.AddRange(_singleVowels);
-        allItems.AddRange(_compoundVowels);
-        allItems.AddRange(_wholeSyllables);
-
-        // 创建下载文件夹
-        string downloadFolder = Path.Combine(FileSystem.AppDataDirectory, "PinyinAudios");
-        if (!Directory.Exists(downloadFolder))
-        {
-            Directory.CreateDirectory(downloadFolder);
-        }
-
-        int successCount = 0;
-        int failCount = 0;
-
-        foreach (var item in allItems)
-        {
-            try
-            {
-                LoadingIndicator.IsVisible = true;
-                LoadingIndicator.IsRunning = true;
-                //StatusLabel.Text = $"正在合成: {item.Pinyin} ({item.Chinese})";
-
-                var audioStream = await _qwenTTS.SpeakAsync(item.Chinese, "CHERRY", "Chinese");
-
-                // 生成安全文件名
-                string safeFileName = $"{item.Pinyin}_{item.Chinese}.wav";
-                string filePath = Path.Combine(downloadFolder, safeFileName);
-
-                using (var fileStream = File.Create(filePath))
-                {
-                    await audioStream.CopyToAsync(fileStream);
-                }
-
-                successCount++;
-                System.Diagnostics.Debug.WriteLine($"下载成功: {filePath}");
-            }
-            catch (Exception ex)
-            {
-                failCount++;
-                System.Diagnostics.Debug.WriteLine($"下载失败 {item.Pinyin}: {ex.Message}");
-            }
-            finally
-            {
-                LoadingIndicator.IsVisible = false;
-                LoadingIndicator.IsRunning = false;
-            }
-
-            await Task.Delay(200);
-        }
-
-        await DisplayAlert("下载完成",
-            $"✅ 成功: {successCount} 个\n❌ 失败: {failCount} 个\n📁 保存在: {downloadFolder}",
-            "确定");
-    }
-
-    private async void OnBatchDownloadClicked(object sender, EventArgs e)
-    {
-        bool confirm = await DisplayAlert("确认下载",
-            "将下载所有拼音的读音音频，\n共 " + (_initials.Count + _singleVowels.Count + _compoundVowels.Count + _wholeSyllables.Count) + " 个文件，\n确定要继续吗？",
-            "确定", "取消");
-
-        if (confirm)
-        {
-            await BatchDownloadAllPinyinAsync();
-        }
     }
 }
 
