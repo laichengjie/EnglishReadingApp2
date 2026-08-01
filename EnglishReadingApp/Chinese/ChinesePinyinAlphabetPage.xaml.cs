@@ -1,5 +1,4 @@
-﻿
-using Plugin.Maui.Audio;
+﻿using Plugin.Maui.Audio;
 using System.Diagnostics;
 
 namespace EnglishReadingApp;
@@ -7,6 +6,9 @@ namespace EnglishReadingApp;
 public partial class ChinesePinyinAlphabetPage : ContentPage
 {
     private readonly QwenTTSService _qwenTTS;
+    private Dictionary<PinyinItem, View> _buttonMap = new();
+    private CancellationTokenSource? _cancellationTokenSource;
+    private bool _isReading = false;
 
     // 一、声母表（23个）
     private List<PinyinItem> _initials = new()
@@ -94,44 +96,46 @@ public partial class ChinesePinyinAlphabetPage : ContentPage
     public ChinesePinyinAlphabetPage()
     {
         InitializeComponent();
-
-        // 初始化 QwenTTSService
         _qwenTTS = new QwenTTSService();
-
-        // 创建按钮
         CreatePinyinButtons();
+
+        // 页面消失时取消朗读
+        this.Disappearing += (s, e) => StopReading();
     }
 
     private void CreatePinyinButtons()
     {
-        // 声母
         foreach (var item in _initials)
         {
-            InitialsFlex.Children.Add(CreatePinyinButton(item));
+            var button = CreatePinyinButton(item);
+            InitialsFlex.Children.Add(button);
+            _buttonMap[item] = button;
         }
 
-        // 单韵母
         foreach (var item in _singleVowels)
         {
-            SingleVowelsFlex.Children.Add(CreatePinyinButton(item));
+            var button = CreatePinyinButton(item);
+            SingleVowelsFlex.Children.Add(button);
+            _buttonMap[item] = button;
         }
 
-        // 复韵母
         foreach (var item in _compoundVowels)
         {
-            CompoundVowelsFlex.Children.Add(CreatePinyinButton(item));
+            var button = CreatePinyinButton(item);
+            CompoundVowelsFlex.Children.Add(button);
+            _buttonMap[item] = button;
         }
 
-        // 整体认读音节
         foreach (var item in _wholeSyllables)
         {
-            WholeSyllablesFlex.Children.Add(CreatePinyinButton(item));
+            var button = CreatePinyinButton(item);
+            WholeSyllablesFlex.Children.Add(button);
+            _buttonMap[item] = button;
         }
     }
 
     private View CreatePinyinButton(PinyinItem item)
     {
-        // 按钮内容布局
         var stackLayout = new VerticalStackLayout
         {
             Spacing = 2,
@@ -156,7 +160,6 @@ public partial class ChinesePinyinAlphabetPage : ContentPage
             HorizontalOptions = LayoutOptions.Center
         });
 
-        // 使用 Frame 包裹内容并添加点击事件
         var frame = new Frame
         {
             Content = stackLayout,
@@ -170,7 +173,6 @@ public partial class ChinesePinyinAlphabetPage : ContentPage
             HasShadow = false
         };
 
-        // 添加点击手势
         var tapGesture = new TapGestureRecognizer();
         tapGesture.Tapped += async (s, e) => await SpeakPinyin(item);
         frame.GestureRecognizers.Add(tapGesture);
@@ -178,85 +180,201 @@ public partial class ChinesePinyinAlphabetPage : ContentPage
         return frame;
     }
 
+    private void HighlightButton(PinyinItem item)
+    {
+        if (_buttonMap.TryGetValue(item, out var view) && view is Frame frame)
+        {
+            frame.BackgroundColor = Color.FromArgb("#FFD93D");
+        }
+    }
+
+    private void UnhighlightAllButtons()
+    {
+        foreach (var kvp in _buttonMap)
+        {
+            if (kvp.Value is Frame frame)
+            {
+                frame.BackgroundColor = Colors.White;
+            }
+        }
+    }
+
+    private void StopReading()
+    {
+        _isReading = false;
+        _cancellationTokenSource?.Cancel();
+        _cancellationTokenSource?.Dispose();
+        _cancellationTokenSource = null;
+        UnhighlightAllButtons();
+        LoadingIndicator.IsVisible = false;
+        LoadingIndicator.IsRunning = false;
+    }
+
     private async Task SpeakPinyin(PinyinItem item)
     {
         try
         {
+            StopReading();
+            await Task.Delay(100);
+
             LoadingIndicator.IsVisible = true;
             LoadingIndicator.IsRunning = true;
+            UnhighlightAllButtons();
+            HighlightButton(item);
+
             await TextToSpeech.Default.SpeakAsync(item.Chinese, new SpeechOptions
             {
                 Volume = 1.0f,
                 Pitch = 1.0f
             });
         }
-        catch (Exception ttsEx)
-        {
-            await DisplayAlert("提示", $"无法发音: {ttsEx.Message}", "确定");
-        }
-        finally
-        {
-            LoadingIndicator.IsVisible = false;
-            LoadingIndicator.IsRunning = false;
-        }
-    }
-
-    private async Task SpeakMultiplePinyin(List<PinyinItem> itemList)
-    {
-        try
-        {
-            LoadingIndicator.IsVisible = true;
-            LoadingIndicator.IsRunning = true;
-
-            foreach (var item in itemList)
-            {
-                await TextToSpeech.Default.SpeakAsync(item.Chinese, new SpeechOptions
-                {
-                    Volume = 1.0f,
-                    Pitch = 1.0f
-                });
-                await Task.Delay(50);
-            }
-        }
         catch (Exception ex)
         {
-            System.Diagnostics.Debug.WriteLine($"批量发音失败: {ex.Message}");
+            System.Diagnostics.Debug.WriteLine($"朗读失败: {ex.Message}");
         }
         finally
         {
+            await Task.Delay(300);
+            UnhighlightAllButtons();
             LoadingIndicator.IsVisible = false;
             LoadingIndicator.IsRunning = false;
         }
     }
 
-    private async void OnReadAllClicked(object sender, EventArgs e)
+    private void StartReading(List<PinyinItem> itemList)
+    {
+        if (_isReading)
+        {
+            StopReading();
+            // 等待取消完成
+            Task.Delay(100).Wait();
+        }
+
+        _isReading = true;
+        _cancellationTokenSource = new CancellationTokenSource();
+        var token = _cancellationTokenSource.Token;
+
+        Task.Run(async () =>
+        {
+            try
+            {
+                foreach (var item in itemList)
+                {
+                    if (token.IsCancellationRequested || !_isReading)
+                    {
+                        MainThread.BeginInvokeOnMainThread(() =>
+                        {
+                            UnhighlightAllButtons();
+                            LoadingIndicator.IsVisible = false;
+                            LoadingIndicator.IsRunning = false;
+                        });
+                        break;
+                    }
+
+                    MainThread.BeginInvokeOnMainThread(() =>
+                    {
+                        UnhighlightAllButtons();
+                        HighlightButton(item);
+                        LoadingIndicator.IsVisible = true;
+                        LoadingIndicator.IsRunning = true;
+                        StatusLabel.Text = $"🔊 {item.Pinyin} ({item.Chinese})";
+                        StatusLabel.IsVisible = true;
+                    });
+
+                    // 检查取消
+                    if (token.IsCancellationRequested) break;
+
+                    await TextToSpeech.Default.SpeakAsync(item.Chinese, new SpeechOptions
+                    {
+                        Volume = 1.0f,
+                        Pitch = 1.0f
+                    });
+
+                    await Task.Delay(150, token);
+                }
+
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    if (_isReading)
+                    {
+                        UnhighlightAllButtons();
+                        StatusLabel.Text = "✅ 朗读完成";
+                        LoadingIndicator.IsVisible = false;
+                        LoadingIndicator.IsRunning = false;
+                        _isReading = false;
+                    }
+                });
+
+                await Task.Delay(1000);
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    StatusLabel.IsVisible = false;
+                });
+            }
+            catch (OperationCanceledException)
+            {
+                System.Diagnostics.Debug.WriteLine("朗读已取消");
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    UnhighlightAllButtons();
+                    LoadingIndicator.IsVisible = false;
+                    LoadingIndicator.IsRunning = false;
+                    _isReading = false;
+                });
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"朗读错误: {ex.Message}");
+                MainThread.BeginInvokeOnMainThread(() =>
+                {
+                    LoadingIndicator.IsVisible = false;
+                    LoadingIndicator.IsRunning = false;
+                    _isReading = false;
+                });
+            }
+        }, token);
+    }
+
+    private void OnReadAllClicked(object sender, EventArgs e)
     {
         var allItems = new List<PinyinItem>();
         allItems.AddRange(_initials);
         allItems.AddRange(_singleVowels);
         allItems.AddRange(_compoundVowels);
         allItems.AddRange(_wholeSyllables);
-
-        await SpeakMultiplePinyin(allItems);
+        StartReading(allItems);
     }
 
-    private async void OnReadInitialsClicked(object sender, EventArgs e)
+    private void OnReadInitialsClicked(object sender, EventArgs e)
     {
-        await SpeakMultiplePinyin(_initials);
+        StartReading(_initials);
     }
 
-    private async void OnReadFinalsClicked(object sender, EventArgs e)
+    private void OnReadFinalsClicked(object sender, EventArgs e)
     {
         var finals = new List<PinyinItem>();
         finals.AddRange(_singleVowels);
         finals.AddRange(_compoundVowels);
         finals.AddRange(_wholeSyllables);
+        StartReading(finals);
+    }
 
-        await SpeakMultiplePinyin(finals);
+    private void OnStopClicked(object sender, EventArgs e)
+    {
+        StopReading();
+        StatusLabel.Text = "⏹ 已停止";
+        StatusLabel.IsVisible = true;
+        Task.Run(async () =>
+        {
+            await Task.Delay(1000);
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                StatusLabel.IsVisible = false;
+            });
+        });
     }
 }
 
-// 拼音数据模型
 public class PinyinItem
 {
     public string Pinyin { get; set; } = "";
