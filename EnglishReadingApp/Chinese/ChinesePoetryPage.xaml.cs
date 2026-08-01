@@ -115,80 +115,98 @@ public partial class ChinesePoetryPage : ContentPage
         DynastyLabel.Text = item.Dynasty;
         TranslationLabel.Text = item.Translation;
 
-        // 显示带拼音的诗句
         ContentLayout.Children.Clear();
         var pinyinLines = item.GetPinyinLines();
 
         foreach (var line in pinyinLines)
         {
-            // 每一行作为一个独立的布局
-            var lineLayout = new VerticalStackLayout
+            var pinyinWords = line.Pinyin.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            var chineseChars = line.Chinese.ToCharArray();
+            int charCount = chineseChars.Length;
+
+            // 使用 StackLayout 让每一行独立
+            var lineContainer = new VerticalStackLayout
+            {
+                HorizontalOptions = LayoutOptions.Center,
+                Spacing = 2,
+                Margin = new Thickness(0, 4)
+            };
+
+            // 拼音行
+            var pinyinRow = new HorizontalStackLayout
             {
                 Spacing = 4,
-                HorizontalOptions = LayoutOptions.Center,
-                Margin = new Thickness(0, 5)
+                HorizontalOptions = LayoutOptions.Center
             };
-
-            // 拼音行（带声调）
-            if (!string.IsNullOrEmpty(line.Pinyin))
-            {
-                var pinyinLabel = new Label
-                {
-                    Text = line.Pinyin,
-                    FontSize = 15,
-                    TextColor = Color.FromArgb("#7F8C8D"),
-                    HorizontalOptions = LayoutOptions.Center,
-                    HorizontalTextAlignment = TextAlignment.Center,
-                    FontAttributes = FontAttributes.None,
-                    LineBreakMode = LineBreakMode.WordWrap,
-                    CharacterSpacing = 4
-                };
-
-                // 点击拼音朗读该行
-                var tapPinyin = new TapGestureRecognizer();
-                tapPinyin.Tapped += async (s, e) =>
-                {
-                    await SpeakText(line.Chinese);
-                };
-                pinyinLabel.GestureRecognizers.Add(tapPinyin);
-                lineLayout.Children.Add(pinyinLabel);
-            }
 
             // 汉字行
-            var chineseLabel = new Label
+            var chineseRow = new HorizontalStackLayout
             {
-                Text = line.Chinese,
-                FontSize = 24,
-                TextColor = Color.FromArgb("#2C3E50"),
-                HorizontalOptions = LayoutOptions.Center,
-                HorizontalTextAlignment = TextAlignment.Center,
-                FontAttributes = FontAttributes.None,
-                CharacterSpacing = 6
+                Spacing = 4,
+                HorizontalOptions = LayoutOptions.Center
             };
 
-            // 点击汉字朗读该行
-            var tapChinese = new TapGestureRecognizer();
-            tapChinese.Tapped += async (s, e) =>
+            for (int i = 0; i < charCount; i++)
             {
-                await SpeakText(line.Chinese);
-            };
-            chineseLabel.GestureRecognizers.Add(tapChinese);
-            lineLayout.Children.Add(chineseLabel);
+                // 每个字作为一个独立的列
+                var charContainer = new VerticalStackLayout
+                {
+                    HorizontalOptions = LayoutOptions.Center,
+                    Spacing = 2,
+                    WidthRequest = 55,
+                    Margin = new Thickness(0)
+                };
 
-            ContentLayout.Children.Add(lineLayout);
+                // 拼音（如果存在）
+                string pinyin = (i < pinyinWords.Length) ? pinyinWords[i] : "";
+                var pinyinLabel = new Label
+                {
+                    Text = pinyin,
+                    FontSize = 14,
+                    TextColor = Color.FromArgb("#7F8C8D"),
+                    HorizontalOptions = LayoutOptions.Center,
+                    HorizontalTextAlignment = TextAlignment.Center
+                };
+
+                // 点击拼音朗读整句
+                var tapPinyin = new TapGestureRecognizer();
+                tapPinyin.Tapped += async (s, e) => await SpeakText(line.Chinese);
+                pinyinLabel.GestureRecognizers.Add(tapPinyin);
+
+                // 汉字
+                var chineseLabel = new Label
+                {
+                    Text = chineseChars[i].ToString(),
+                    FontSize = 30,
+                    FontAttributes = FontAttributes.Bold,
+                    TextColor = Color.FromArgb("#2C3E50"),
+                    HorizontalOptions = LayoutOptions.Center,
+                    HorizontalTextAlignment = TextAlignment.Center
+                };
+
+                var tapChinese = new TapGestureRecognizer();
+                tapChinese.Tapped += async (s, e) => await SpeakText(line.Chinese);
+                chineseLabel.GestureRecognizers.Add(tapChinese);
+
+                // 添加到每个字的容器中
+                charContainer.Children.Add(pinyinLabel);
+                charContainer.Children.Add(chineseLabel);
+
+                // 添加到行
+                pinyinRow.Children.Add(charContainer);
+            }
+
+            lineContainer.Children.Add(pinyinRow);
+            ContentLayout.Children.Add(lineContainer);
         }
 
-        // 使用 FindByName 获取译文 Frame
         var translationFrame = this.FindByName<Frame>("TranslationFrame");
         if (translationFrame != null)
         {
             translationFrame.IsVisible = _showTranslation;
         }
 
-        // 更新进度
         ProgressLabel.Text = $"第 {_currentIndex + 1} / {_poetryList.Count} 首";
-
-        // 隐藏结果
         ResultFrame.IsVisible = false;
     }
 
@@ -219,7 +237,6 @@ public partial class ChinesePoetryPage : ContentPage
         }
     }
 
-    // 听全诗
     private async void OnListenFullClicked(object sender, EventArgs e)
     {
         var item = _poetryList[_currentIndex];
@@ -251,7 +268,6 @@ public partial class ChinesePoetryPage : ContentPage
         }
     }
 
-    // 跟读
     private async void OnRecordClicked(object sender, EventArgs e)
     {
         try
@@ -284,7 +300,6 @@ public partial class ChinesePoetryPage : ContentPage
         }
     }
 
-    // 显示/隐藏译文
     private void OnTranslationClicked(object sender, EventArgs e)
     {
         _showTranslation = !_showTranslation;
@@ -295,7 +310,6 @@ public partial class ChinesePoetryPage : ContentPage
         }
     }
 
-    // 上一首
     private async void OnPreviousClicked(object sender, EventArgs e)
     {
         if (_currentIndex > 0)
@@ -309,7 +323,6 @@ public partial class ChinesePoetryPage : ContentPage
         }
     }
 
-    // 下一首
     private async void OnNextClicked(object sender, EventArgs e)
     {
         if (_currentIndex < _poetryList.Count - 1)
