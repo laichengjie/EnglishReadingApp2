@@ -1,0 +1,185 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+    <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="EnglishReadingApp.ChinesePoetryPage"
+             Title="古诗词学习"
+             BackgroundColor="#F8F9FA">
+
+        <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- 顶部标题栏 -->
+        <VerticalStackLayout Grid.Row="0" 
+                             BackgroundColor="#8B4513" 
+                             Padding="20,15"
+                             Spacing="5">
+            <Label Text="📜 古诗词学习" 
+                   FontSize="22" 
+                   FontAttributes="Bold"
+                   TextColor="White"
+                   HorizontalOptions="Center"/>
+            <Label Text="诵读经典 · 传承文化" 
+                   FontSize="13" 
+                   TextColor="White"
+                   Opacity="0.9"
+                   HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+
+        <!-- 主内容区域 -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="12" Padding="20">
+
+                <!-- 进度指示 -->
+                <Label x:Name="ProgressLabel" 
+                       Text="第 1 / 10 首" 
+                       FontSize="14"
+                       TextColor="#666"
+                       HorizontalOptions="Center"/>
+
+                <!-- 诗词卡片 -->
+                <Frame CornerRadius="15"
+                       BackgroundColor="White"
+                       HasShadow="True"
+                       Padding="20">
+                    <VerticalStackLayout Spacing="12">
+
+                        <!-- 标题 -->
+                        <Label x:Name="TitleLabel" 
+                               Text="静夜思" 
+                               FontSize="26" 
+                               FontAttributes="Bold"
+                               TextColor="#2C3E50"
+                               HorizontalOptions="Center"/>
+
+                        <!-- 作者信息 -->
+                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
+                            <Label x:Name="AuthorLabel" 
+                                   Text="李白" 
+                                   FontSize="16"
+                                   TextColor="#7F8C8D"/>
+                            <Label Text="·" FontSize="16" TextColor="#7F8C8D"/>
+                            <Label x:Name="DynastyLabel" 
+                                   Text="唐代" 
+                                   FontSize="16"
+                                   TextColor="#7F8C8D"/>
+                        </HorizontalStackLayout>
+
+                        <!-- 分隔线 -->
+                        <BoxView HeightRequest="1" Color="#E0E0E0"/>
+
+                        <!-- 诗词内容（带拼音） -->
+                        <VerticalStackLayout x:Name="ContentLayout" Spacing="10">
+                            <!-- 动态生成带拼音的诗句 -->
+                        </VerticalStackLayout>
+
+                        <!-- 译文 -->
+                        <Frame CornerRadius="10"
+                               BackgroundColor="#FFF8E1"
+                               Padding="15"
+                               IsVisible="False">
+                            <VerticalStackLayout Spacing="5">
+                                <Label Text="📖 译文" 
+                                       FontSize="14" 
+                                       FontAttributes="Bold"
+                                       TextColor="#E67E22"/>
+                                <Label x:Name="TranslationLabel" 
+                                       Text="" 
+                                       FontSize="15"
+                                       TextColor="#5D4037"/>
+                            </VerticalStackLayout>
+                        </Frame>
+
+                    </VerticalStackLayout>
+                </Frame>
+
+                <!-- 功能按钮 -->
+                <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10">
+                    <Button Grid.Column="0"
+                            Text="🔊 听全诗"
+                            Clicked="OnListenFullClicked"
+                            BackgroundColor="#3498DB"
+                            TextColor="White"
+                            CornerRadius="10"
+                            HeightRequest="50"
+                            FontSize="15"/>
+                    <Button Grid.Column="1"
+                            Text="📖 译文"
+                            Clicked="OnTranslationClicked"
+                            BackgroundColor="#E67E22"
+                            TextColor="White"
+                            CornerRadius="10"
+                            HeightRequest="50"
+                            FontSize="15"/>
+                    <Button Grid.Column="2"
+                            Text="🎤 跟读"
+                            Clicked="OnRecordClicked"
+                            BackgroundColor="#27AE60"
+                            TextColor="White"
+                            CornerRadius="10"
+                            HeightRequest="50"
+                            FontSize="15"/>
+                </Grid>
+
+                <!-- 导航按钮 -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="15">
+                    <Button Grid.Column="0"
+                            Text="◀ 上一首"
+                            Clicked="OnPreviousClicked"
+                            BackgroundColor="#95A5A6"
+                            TextColor="White"
+                            CornerRadius="10"
+                            HeightRequest="45"
+                            FontSize="14"/>
+                    <Button Grid.Column="1"
+                            Text="下一首 ▶"
+                            Clicked="OnNextClicked"
+                            BackgroundColor="#8E44AD"
+                            TextColor="White"
+                            CornerRadius="10"
+                            HeightRequest="45"
+                            FontSize="14"/>
+                </Grid>
+
+                <!-- 识别结果 -->
+                <Frame x:Name="ResultFrame" 
+                       BackgroundColor="#FFF3E0" 
+                       CornerRadius="10" 
+                       Padding="15"
+                       IsVisible="False">
+                    <VerticalStackLayout Spacing="5">
+                        <Label x:Name="ResultLabel" 
+                               Text="" 
+                               FontSize="15"
+                               TextColor="#E67E22"/>
+                        <Label x:Name="ScoreLabel" 
+                               Text="" 
+                               FontSize="16"
+                               FontAttributes="Bold"/>
+                    </VerticalStackLayout>
+                </Frame>
+
+                <ActivityIndicator x:Name="LoadingIndicator" 
+                                   IsVisible="False" 
+                                   Color="#3498DB"
+                                   HorizontalOptions="Center"/>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- 底部状态栏 -->
+        <VerticalStackLayout Grid.Row="2" 
+                             BackgroundColor="#F0F0F0"
+                             Padding="10">
+            <Label x:Name="StatusLabel" 
+                   Text="点击听全诗或跟读" 
+                   FontSize="12"
+                   TextColor="#666"
+                   HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentPage>

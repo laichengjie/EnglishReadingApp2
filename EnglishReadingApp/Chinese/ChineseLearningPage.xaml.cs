@@ -22,7 +22,7 @@ public partial class ChineseLearningPage : ContentPage
     // 古诗词
     private async void OnPoetryFrameTapped(object sender, EventArgs e)
     {
-        //await Navigation.PushAsync(new ChinesePoetryPage());
+        await Navigation.PushAsync(new ChinesePoetryPage());
     }
 
     // 成语学习

@@ -81,6 +81,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CingZeoi.ChinesePinyinConverter" Version="1.0.0" />
+		<PackageReference Include="Microsoft.International.Converters.PinYinConverter" Version="1.0.0" />
 		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.8" />
 		<PackageReference Include="PinYin" Version="1.0.1" />
@@ -88,6 +90,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Compile Update="Chinese\ChinesePoetryPage.xaml.cs">
+	    <DependentUpon>ChinesePoetryPage.xaml</DependentUpon>
+	  </Compile>
 	  <Compile Update="Chinese\ChinesePinyinAlphabetPage.xaml.cs">
 	    <DependentUpon>ChinesePinyinAlphabetPage.xaml</DependentUpon>
 	  </Compile>
@@ -109,6 +114,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <MauiXaml Update="Chinese\ChinesePoetryPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Chinese\ChinesePinyinAlphabetPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
