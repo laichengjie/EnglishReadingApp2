@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-    <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="EnglishReadingApp.ChinesePoetryPage"
              Title="古诗词学习"
              BackgroundColor="#F8F9FA">
 
-        <Grid>
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -73,11 +73,12 @@
 
                         <!-- 诗词内容（带拼音） -->
                         <VerticalStackLayout x:Name="ContentLayout" Spacing="10">
-                            <!-- 动态生成带拼音的诗句 -->
+                            <!-- 动态生成 -->
                         </VerticalStackLayout>
 
-                        <!-- 译文 -->
-                        <Frame CornerRadius="10"
+                        <!-- 译文 Frame - 添加 x:Name -->
+                        <Frame x:Name="TranslationFrame"
+                               CornerRadius="10"
                                BackgroundColor="#FFF8E1"
                                Padding="15"
                                IsVisible="False">

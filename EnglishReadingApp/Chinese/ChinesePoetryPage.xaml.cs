@@ -1,13 +1,11 @@
 ﻿using Plugin.Maui.Audio;
 using System.Diagnostics;
-using EnglishReadingApp;
 using EnglishReadingApp.Entity;
 
 namespace EnglishReadingApp;
 
 public partial class ChinesePoetryPage : ContentPage
 {
-    private readonly QwenTTSService _qwenTTS;
     private List<PoetryItem> _poetryList;
     private int _currentIndex = 0;
     private bool _showTranslation = false;
@@ -15,7 +13,6 @@ public partial class ChinesePoetryPage : ContentPage
     public ChinesePoetryPage()
     {
         InitializeComponent();
-        _qwenTTS = new QwenTTSService();
         LoadPoetryData();
         DisplayCurrentPoetry();
     }
@@ -147,7 +144,7 @@ public partial class ChinesePoetryPage : ContentPage
                     CharacterSpacing = 4
                 };
 
-                // 点击拼音朗读该字
+                // 点击拼音朗读该行
                 var tapPinyin = new TapGestureRecognizer();
                 tapPinyin.Tapped += async (s, e) =>
                 {
@@ -169,7 +166,7 @@ public partial class ChinesePoetryPage : ContentPage
                 CharacterSpacing = 6
             };
 
-            // 点击汉字朗读该字
+            // 点击汉字朗读该行
             var tapChinese = new TapGestureRecognizer();
             tapChinese.Tapped += async (s, e) =>
             {
@@ -181,8 +178,8 @@ public partial class ChinesePoetryPage : ContentPage
             ContentLayout.Children.Add(lineLayout);
         }
 
-        // 更新译文显示
-        var translationFrame = TranslationLabel.Parent as Frame;
+        // 使用 FindByName 获取译文 Frame
+        var translationFrame = this.FindByName<Frame>("TranslationFrame");
         if (translationFrame != null)
         {
             translationFrame.IsVisible = _showTranslation;
@@ -212,6 +209,7 @@ public partial class ChinesePoetryPage : ContentPage
         catch (Exception ex)
         {
             Debug.WriteLine($"朗读失败: {ex.Message}");
+            await DisplayAlert("提示", $"无法发音: {ex.Message}", "确定");
         }
         finally
         {
@@ -231,24 +229,18 @@ public partial class ChinesePoetryPage : ContentPage
             LoadingIndicator.IsRunning = true;
             StatusLabel.Text = "正在播放整首诗...";
 
-            // 使用阿里云 TTS 播放整首诗
-            var audioStream = await _qwenTTS.SpeakAsync(item.Content, "CHERRY", "Chinese");
-            var audioManager = AudioManager.Current;
-            var player = audioManager.CreatePlayer(audioStream);
-            player.Play();
-
-            while (player.CurrentPosition < player.Duration)
+            await TextToSpeech.Default.SpeakAsync(item.Content, new SpeechOptions
             {
-                await Task.Delay(50);
-            }
-            player.Dispose();
+                Volume = 1.0f,
+                Pitch = 1.0f
+            });
 
             StatusLabel.Text = "播放完成";
         }
         catch (Exception ex)
         {
             Debug.WriteLine($"播放失败: {ex.Message}");
-            await TextToSpeech.Default.SpeakAsync(item.Content);
+            await DisplayAlert("提示", $"播放失败: {ex.Message}", "确定");
         }
         finally
         {
@@ -296,7 +288,7 @@ public partial class ChinesePoetryPage : ContentPage
     private void OnTranslationClicked(object sender, EventArgs e)
     {
         _showTranslation = !_showTranslation;
-        var translationFrame = TranslationLabel.Parent as Frame;
+        var translationFrame = this.FindByName<Frame>("TranslationFrame");
         if (translationFrame != null)
         {
             translationFrame.IsVisible = _showTranslation;
