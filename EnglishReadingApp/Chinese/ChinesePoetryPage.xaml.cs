@@ -163,7 +163,8 @@ public partial class ChinesePoetryPage : ContentPage
                 {
                     Text = pinyin,
                     FontSize = 14,
-                    TextColor = Color.FromArgb("#7F8C8D"),
+                    FontAttributes = FontAttributes.Bold,
+                    TextColor = Color.FromArgb("2C3E50"),
                     HorizontalOptions = LayoutOptions.Center,
                     HorizontalTextAlignment = TextAlignment.Center
                 };
