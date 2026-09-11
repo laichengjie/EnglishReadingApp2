@@ -20,88 +20,243 @@ public partial class ChinesePoetryPage : ContentPage
     private void LoadPoetryData()
     {
         _poetryList = new List<PoetryItem>
-        {
-            new PoetryItem
-            {
-                Title = "静夜思",
-                Author = "李白",
-                Dynasty = "唐代",
-                Content = "床前明月光\n疑是地上霜\n举头望明月\n低头思故乡",
-                Translation = "明亮的月光洒在床前，好像地上泛起了一层白霜。我抬起头来，看那空中的明月，不由得低头沉思，想起了远方的家乡。"
-            },
-            new PoetryItem
-            {
-                Title = "春晓",
-                Author = "孟浩然",
-                Dynasty = "唐代",
-                Content = "春眠不觉晓\n处处闻啼鸟\n夜来风雨声\n花落知多少",
-                Translation = "春天睡醒不觉天已大亮，到处是鸟儿清脆的叫声。回想昨夜的阵阵风雨声，不知吹落了多少娇美的春花。"
-            },
-            new PoetryItem
-            {
-                Title = "咏鹅",
-                Author = "骆宾王",
-                Dynasty = "唐代",
-                Content = "鹅鹅鹅\n曲项向天歌\n白毛浮绿水\n红掌拨清波",
-                Translation = "鹅，鹅，鹅，弯曲着脖子对着天空歌唱。白色的羽毛漂浮在碧绿的水面上，红色的脚掌划动着清澈的水波。"
-            },
-            new PoetryItem
-            {
-                Title = "悯农",
-                Author = "李绅",
-                Dynasty = "唐代",
-                Content = "锄禾日当午\n汗滴禾下土\n谁知盘中餐\n粒粒皆辛苦",
-                Translation = "盛夏中午，农民还在田里锄地，汗水滴落在泥土里。谁又知道盘中的饭菜，每一粒都是农民辛辛苦苦劳动得来的。"
-            },
-            new PoetryItem
-            {
-                Title = "登鹳雀楼",
-                Author = "王之涣",
-                Dynasty = "唐代",
-                Content = "白日依山尽\n黄河入海流\n欲穷千里目\n更上一层楼",
-                Translation = "夕阳沿着西山慢慢落下，黄河水滚滚流入大海。想要看到更远的景色，就要再登上一层楼。"
-            },
-            new PoetryItem
-            {
-                Title = "望庐山瀑布",
-                Author = "李白",
-                Dynasty = "唐代",
-                Content = "日照香炉生紫烟\n遥看瀑布挂前川\n飞流直下三千尺\n疑是银河落九天",
-                Translation = "太阳照在香炉峰上，升起紫色的烟雾，远远看去，瀑布像一条白练挂在山前。水流从三千尺的高处飞泻而下，好像是银河从九天之上落下来。"
-            },
-            new PoetryItem
-            {
-                Title = "绝句",
-                Author = "杜甫",
-                Dynasty = "唐代",
-                Content = "两个黄鹂鸣翠柳\n一行白鹭上青天\n窗含西岭千秋雪\n门泊东吴万里船",
-                Translation = "两只黄鹂在翠绿的柳树间欢快地歌唱，一行白鹭飞向蔚蓝的天空。窗口可以看见西岭千年不化的积雪，门口停泊着来自东吴的远航船只。"
-            },
-            new PoetryItem
-            {
-                Title = "赋得古原草送别",
-                Author = "白居易",
-                Dynasty = "唐代",
-                Content = "离离原上草\n一岁一枯荣\n野火烧不尽\n春风吹又生",
-                Translation = "原野上长满了茂盛的青草，每年都会经历一次枯萎和茂盛。野火无法将它们完全烧尽，春风吹来，它们又会重新生长。"
-            },
-            new PoetryItem
-            {
-                Title = "望月怀远",
-                Author = "张九龄",
-                Dynasty = "唐代",
-                Content = "海上生明月\n天涯共此时\n情人怨遥夜\n竟夕起相思",
-                Translation = "海上升起了一轮明月，远在天涯的人和我共同仰望。有情的人儿怨恨这漫长的夜晚，整个晚上都在思念远方的亲人。"
-            },
-            new PoetryItem
-            {
-                Title = "江雪",
-                Author = "柳宗元",
-                Dynasty = "唐代",
-                Content = "千山鸟飞绝\n万径人踪灭\n孤舟蓑笠翁\n独钓寒江雪",
-                Translation = "群山之中不见飞鸟的踪迹，所有的道路上也不见人的身影。江面上一只孤独的小船，船上有个穿蓑衣戴斗笠的老翁，独自在寒冷的江面上垂钓。"
-            }
-        };
+{
+    new PoetryItem
+    {
+        Title = "静夜思",
+        Author = "李白",
+        Dynasty = "唐代",
+        Content = "床前明月光\n疑是地上霜\n举头望明月\n低头思故乡",
+        Translation = "明亮的月光洒在床前，好像地上泛起了一层白霜。我抬起头来，看那空中的明月，不由得低头沉思，想起了远方的家乡。"
+    },
+    new PoetryItem
+    {
+        Title = "春晓",
+        Author = "孟浩然",
+        Dynasty = "唐代",
+        Content = "春眠不觉晓\n处处闻啼鸟\n夜来风雨声\n花落知多少",
+        Translation = "春天睡醒不觉天已大亮，到处是鸟儿清脆的叫声。回想昨夜的阵阵风雨声，不知吹落了多少娇美的春花。"
+    },
+    new PoetryItem
+    {
+        Title = "咏鹅",
+        Author = "骆宾王",
+        Dynasty = "唐代",
+        Content = "鹅鹅鹅\n曲项向天歌\n白毛浮绿水\n红掌拨清波",
+        Translation = "鹅，鹅，鹅，弯曲着脖子对着天空歌唱。白色的羽毛漂浮在碧绿的水面上，红色的脚掌划动着清澈的水波。"
+    },
+    new PoetryItem
+    {
+        Title = "悯农",
+        Author = "李绅",
+        Dynasty = "唐代",
+        Content = "锄禾日当午\n汗滴禾下土\n谁知盘中餐\n粒粒皆辛苦",
+        Translation = "盛夏中午，农民还在田里锄地，汗水滴落在泥土里。谁又知道盘中的饭菜，每一粒都是农民辛辛苦苦劳动得来的。"
+    },
+    new PoetryItem
+    {
+        Title = "登鹳雀楼",
+        Author = "王之涣",
+        Dynasty = "唐代",
+        Content = "白日依山尽\n黄河入海流\n欲穷千里目\n更上一层楼",
+        Translation = "夕阳沿着西山慢慢落下，黄河水滚滚流入大海。想要看到更远的景色，就要再登上一层楼。"
+    },
+    new PoetryItem
+    {
+        Title = "望庐山瀑布",
+        Author = "李白",
+        Dynasty = "唐代",
+        Content = "日照香炉生紫烟\n遥看瀑布挂前川\n飞流直下三千尺\n疑是银河落九天",
+        Translation = "太阳照在香炉峰上，升起紫色的烟雾，远远看去，瀑布像一条白练挂在山前。水流从三千尺的高处飞泻而下，好像是银河从九天之上落下来。"
+    },
+    new PoetryItem
+    {
+        Title = "绝句",
+        Author = "杜甫",
+        Dynasty = "唐代",
+        Content = "两个黄鹂鸣翠柳\n一行白鹭上青天\n窗含西岭千秋雪\n门泊东吴万里船",
+        Translation = "两只黄鹂在翠绿的柳树间欢快地歌唱，一行白鹭飞向蔚蓝的天空。窗口可以看见西岭千年不化的积雪，门口停泊着来自东吴的远航船只。"
+    },
+    new PoetryItem
+    {
+        Title = "赋得古原草送别",
+        Author = "白居易",
+        Dynasty = "唐代",
+        Content = "离离原上草\n一岁一枯荣\n野火烧不尽\n春风吹又生",
+        Translation = "原野上长满了茂盛的青草，每年都会经历一次枯萎和茂盛。野火无法将它们完全烧尽，春风吹来，它们又会重新生长。"
+    },
+    new PoetryItem
+    {
+        Title = "江雪",
+        Author = "柳宗元",
+        Dynasty = "唐代",
+        Content = "千山鸟飞绝\n万径人踪灭\n孤舟蓑笠翁\n独钓寒江雪",
+        Translation = "群山之中不见飞鸟的踪迹，所有的道路上也不见人的身影。江面上一只孤独的小船，船上有个穿蓑衣戴斗笠的老翁，独自在寒冷的江面上垂钓。"
+    },
+
+    // 1
+    new PoetryItem
+    {
+        Title = "咏廿四气诗·白露八月节",
+        Author = "元稹",
+        Dynasty = "唐代",
+        Content = "露沾蔬草白，\n天气转青高。\n叶下和秋吹，\n惊看两鬓毛。\n养羞因野鸟，\n为客讶蓬蒿。\n火急收田种，\n晨昏莫辞劳。",
+        Translation = "白露时节，露水沾湿蔬菜野草，草叶发白，天气转凉，天空青碧高远。秋风吹落叶，令人惊觉两鬓已生白发。野鸟储藏食物准备过冬，客居他乡的人见蓬蒿丛生而惊讶。农事紧急，要赶紧收割田种，从早到晚不要推辞辛劳。"
+    },
+    // 2
+    new PoetryItem
+    {
+        Title = "诗经·周南·螽斯",
+        Author = "佚名",
+        Dynasty = "先秦",
+        Content = "螽斯羽，诜诜兮。\n宜尔子孙，振振兮。\n螽斯羽，薨薨兮。\n宜尔子孙，绳绳兮。\n螽斯羽，揖揖兮。\n宜尔子孙，蛰蛰兮。",
+        Translation = "蝗虫张开翅膀，成群飞舞。你的子孙真多啊，昌盛振奋。蝗虫张开翅膀，嗡嗡齐飞。你的子孙真多啊，绵延不绝。蝗虫张开翅膀，聚集众多。你的子孙真多啊，和乐安聚。"
+    },
+    // 3
+    new PoetryItem
+    {
+        Title = "诗经·卫风·木瓜",
+        Author = "佚名",
+        Dynasty = "先秦",
+        Content = "投我以木瓜，\n报之以琼琚。\n匪报也，\n永以为好也！\n投我以木桃，\n报之以琼瑶。\n匪报也，\n永以为好也！\n投我以木李，\n报之以琼玖。\n匪报也，\n永以为好也！",
+        Translation = "你赠我木瓜，我回赠你美玉。不只是报答，是希望永远相好！你赠我木桃，我回赠你美玉。不只是报答，是希望永远相好！你赠我木李，我回赠你美玉。不只是报答，是希望永远相好！"
+    },
+    // 4
+    new PoetryItem
+    {
+        Title = "咏廿四气诗·秋分八月中",
+        Author = "元稹",
+        Dynasty = "唐代",
+        Content = "琴弹南吕调，\n风色已高清。\n云散飘飖影，\n雷收振怒声。\n乾坤能静肃，\n寒暑喜均平。\n忽见新来雁，\n人心敢不惊？",
+        Translation = "弹起南吕之调，秋风已经清朗高远。云散后留下飘摇的影子，雷声收起震怒。天地变得宁静肃穆，寒暑正好均衡。忽然看见新飞来的大雁，人心怎能不惊动？"
+    },
+    // 5
+    new PoetryItem
+    {
+        Title = "诗经·秦风·无衣",
+        Author = "佚名",
+        Dynasty = "先秦",
+        Content = "岂曰无衣？\n与子同袍。\n王于兴师，\n修我戈矛。\n与子同仇！\n岂曰无衣？\n与子同泽。\n王于兴师，\n修我矛戟。\n与子偕作！\n岂曰无衣？\n与子同裳。\n王于兴师，\n修我甲兵。\n与子偕行！",
+        Translation = "谁说没有衣裳？我和你同穿战袍。君王要出兵打仗，修好我们的戈和矛。和你共同对敌！谁说没有衣裳？我和你同穿内衣。君王要出兵打仗，修好我们的矛和戟。和你一同行动！谁说没有衣裳？我和你同穿下裳。君王要出兵打仗，修好我们的铠甲兵器。和你一同前进！"
+    },
+    // 6
+    new PoetryItem
+    {
+        Title = "咏廿四气诗·寒露九月节",
+        Author = "元稹",
+        Dynasty = "唐代",
+        Content = "寒露惊秋晚，\n朝看菊渐黄。\n千家风扫叶，\n万里雁随阳。\n化蛤悲群鸟，\n收田畏早霜。\n因知松柏志，\n冬夏色苍苍。",
+        Translation = "寒露到来，令人惊觉秋天已深，早晨看见菊花渐渐变黄。千家万户被风扫落叶，万里长空大雁追随暖阳南飞。传说雀鸟入水化为蛤，令人悲叹群鸟；收割田地又怕早霜。因此知道松柏的志向，无论冬夏都苍翠不改。"
+    },
+    // 7
+    new PoetryItem
+    {
+        Title = "诗经·国风·十亩之间",
+        Author = "佚名",
+        Dynasty = "先秦",
+        Content = "十亩之间兮，\n桑者闲闲兮，\n行与子还兮。\n十亩之外兮，\n桑者泄泄兮，\n行与子逝兮。",
+        Translation = "十亩桑田之间啊，采桑的人从容悠闲啊，我要和你一起回去啊。十亩桑田之外啊，采桑的人舒缓自在啊，我要和你一起离去啊。"
+    },
+    // 8
+    new PoetryItem
+    {
+        Title = "咏廿四气诗·霜降九月中",
+        Author = "元稹",
+        Dynasty = "唐代",
+        Content = "风卷清云尽，\n空天万里霜。\n野豺先祭月，\n仙菊遇重阳。\n秋色悲疏木，\n鸿鸣忆故乡。\n谁知一樽酒，\n能使百秋亡。",
+        Translation = "风吹卷清云散尽，空旷天空万里铺霜。野豺开始祭月，仙菊正遇重阳。秋色令稀疏树木更显悲凉，鸿雁鸣叫让人思念故乡。谁知道一樽酒，能让人忘却百秋忧愁。"
+    },
+    // 9
+    new PoetryItem
+    {
+        Title = "诗经·秦风·渭阳",
+        Author = "佚名",
+        Dynasty = "先秦",
+        Content = "我送舅氏，\n曰至渭阳。\n何以赠之？\n路车乘黄。\n我送舅氏，\n悠悠我思。\n何以赠之？\n琼瑰玉佩。",
+        Translation = "我送舅舅，送到渭水之北。用什么赠送他？一辆大车和四匹黄马。我送舅舅，心中思念悠长。用什么赠送他？美玉和玉佩。"
+    },
+    // 10
+    new PoetryItem
+    {
+        Title = "立冬",
+        Author = "李白",
+        Dynasty = "唐代",
+        Content = "冻笔新诗懒写，\n寒炉美酒时温。\n醉看墨花月白，\n恍疑雪满前村。",
+        Translation = "天气寒冷，毛笔冻结，懒得写新诗；寒夜炉边，美酒时常温热。醉眼朦胧中看着墨花和月色洁白，恍惚怀疑大雪已经铺满前村。"
+    },
+    // 11
+    new PoetryItem
+    {
+        Title = "诗经·邶风·二子乘舟",
+        Author = "佚名",
+        Dynasty = "先秦",
+        Content = "二子乘舟，\n泛泛其景。\n愿言思子，\n中心养养。\n二子乘舟，\n泛泛其逝。\n愿言思子，\n不瑕有害。",
+        Translation = "两个孩子乘船，船影漂浮远去。思念你们啊，心中忧虑不安。两个孩子乘船，船影漂流消逝。思念你们啊，希望没有灾祸。"
+    },
+    // 12
+    new PoetryItem
+    {
+        Title = "春近四绝句（其三）",
+        Author = "黄庭坚",
+        Dynasty = "宋代",
+        Content = "小雪晴沙不作泥，\n疏帘红日弄朝晖。\n年华已伴梅梢晚，\n春色先从草际归。",
+        Translation = "小雪后晴朗的沙地不再成泥，稀疏帘幕间红日摆弄早晨的光辉。年华已随着梅梢迟晚，春色却先从草边归来。"
+    },
+    // 13
+    new PoetryItem
+    {
+        Title = "大雪",
+        Author = "陆游",
+        Dynasty = "宋代",
+        Content = "海天黯黯万重云，\n欲到前村路不分。\n烈风吹雪深一丈，\n大布缝衫重七斤。",
+        Translation = "海天昏暗，乌云重重，想要走到前村，道路已经分辨不清。猛烈的风吹着大雪，积雪深达一丈；粗布缝成的衣衫沉重得像有七斤。"
+    },
+    // 14
+    new PoetryItem
+    {
+        Title = "邯郸冬至夜思家",
+        Author = "白居易",
+        Dynasty = "唐代",
+        Content = "邯郸驿里逢冬至，\n抱膝灯前影伴身。\n想得家中夜深坐，\n还应说着远行人。",
+        Translation = "在邯郸驿站里遇到冬至，抱着膝盖坐在灯前，只有影子陪伴自己。想到家里的人深夜坐着，应该还在谈论着远行在外的我。"
+    },
+    // 15
+    new PoetryItem
+    {
+        Title = "窗前木芙蓉",
+        Author = "范成大",
+        Dynasty = "宋代",
+        Content = "辛苦孤花破小寒，\n花心应似客心酸。\n更凭青女留连得，\n未作愁红怨绿看。",
+        Translation = "辛苦孤独的花朵冲破小寒开放，花心应该像客居之人的心一样酸楚。更凭借霜神青女留连，未变成愁红怨绿的哀伤模样。"
+    },
+    // 16
+    new PoetryItem
+    {
+        Title = "连夕大寒示邻士二首 其一",
+        Author = "李光",
+        Dynasty = "宋代",
+        Content = "冻云垂地北风颠，\n妆点江湖欲雪天。\n我亦随身有蓑笠，\n兴来同上钓鱼船。",
+        Translation = "冻云低垂到地面，北风狂颠，装点江湖，正是将要下雪的天气。我也随身带着蓑衣斗笠，兴致来时一起上钓鱼船。"
+    },
+    // 17
+    new PoetryItem
+    {
+        Title = "立春偶成",
+        Author = "张栻",
+        Dynasty = "宋代",
+        Content = "律回岁晚冰霜少，\n春到人间草木知。\n便觉眼前生意满，\n东风吹水绿参差。",
+        Translation = "节气回转，一年将尽时冰霜渐少；春天来到人间，草木最先知道。只觉得眼前充满生机，东风吹拂水面，绿波参差荡漾。"
+    },
+    // 18
+    new PoetryItem
+    {
+        Title = "春游湖",
+        Author = "徐俯",
+        Dynasty = "宋代",
+        Content = "双飞燕子几时回，\n夹岸桃花蘸水开。\n春雨断桥人不度，\n小舟撑出柳阴来。",
+        Translation = "双双飞舞的燕子什么时候回来？两岸桃花贴着水面盛开。春雨后断桥阻隔，行人无法渡过；一只小船从柳荫中撑出来。"
+    }
+};
     }
 
     private void DisplayCurrentPoetry()
@@ -157,7 +312,7 @@ public partial class ChinesePoetryPage : ContentPage
             translationFrame.IsVisible = _showTranslation;
         }
 
-        
+
         ResultFrame.IsVisible = false;
     }
 
@@ -411,6 +566,7 @@ public partial class ChinesePoetryPage : ContentPage
         {
             _currentIndex++;
             DisplayCurrentPoetry();
+            OnListenFullClicked(null, null); 
         }
         else
         {
