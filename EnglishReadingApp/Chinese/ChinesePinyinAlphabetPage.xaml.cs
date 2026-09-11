@@ -16,14 +16,15 @@ public partial class ChinesePinyinAlphabetPage : ContentPage
         new PinyinItem { Pinyin = "b", Chinese = "玻", Example = "玻璃" },
         new PinyinItem { Pinyin = "p", Chinese = "坡", Example = "山坡" },
         new PinyinItem { Pinyin = "m", Chinese = "摸", Example = "抚摸" },
-        new PinyinItem { Pinyin = "f", Chinese = "佛", Example = "佛像" },
-        new PinyinItem { Pinyin = "d", Chinese = "得", Example = "得到" },
+        new PinyinItem { Pinyin = "f", Chinese = "佛", Example = "佛像" },  // 多音 fó/fú：无单音同音字可替，保持原字
+        // 呼读音 dé。"德"为单音字恒读 dé；原"得"有 dé/de/děi 三读，易被 TTS 读错
+        new PinyinItem { Pinyin = "d", Chinese = "德", Example = "得到" },
         new PinyinItem { Pinyin = "t", Chinese = "特", Example = "特别" },
         new PinyinItem { Pinyin = "n", Chinese = "讷", Example = "讷讷" },
-        new PinyinItem { Pinyin = "l", Chinese = "勒", Example = "勒紧" },
+        new PinyinItem { Pinyin = "l", Chinese = "勒", Example = "勒紧" },  // 多音 lè/lēi：无单音同音字可替，保持原字
         new PinyinItem { Pinyin = "g", Chinese = "哥", Example = "哥哥" },
         new PinyinItem { Pinyin = "k", Chinese = "科", Example = "科学" },
-        new PinyinItem { Pinyin = "h", Chinese = "喝", Example = "喝水" },
+        new PinyinItem { Pinyin = "h", Chinese = "喝", Example = "喝水" },  // 多音 hē/hè：无单音同音字可替，保持原字
         new PinyinItem { Pinyin = "j", Chinese = "鸡", Example = "小鸡" },
         new PinyinItem { Pinyin = "q", Chinese = "欺", Example = "欺负" },
         new PinyinItem { Pinyin = "x", Chinese = "西", Example = "西瓜" },
@@ -32,7 +33,8 @@ public partial class ChinesePinyinAlphabetPage : ContentPage
         new PinyinItem { Pinyin = "sh", Chinese = "诗", Example = "诗歌" },
         new PinyinItem { Pinyin = "r", Chinese = "日", Example = "日子" },
         new PinyinItem { Pinyin = "z", Chinese = "资", Example = "资本" },
-        new PinyinItem { Pinyin = "c", Chinese = "刺", Example = "刺猬" },
+        // 标准呼读音为 cī（一声），非 cì。"雌"与 z(资 zī)、s(思 sī) 一致
+        new PinyinItem { Pinyin = "c", Chinese = "雌", Example = "刺猬" },
         new PinyinItem { Pinyin = "s", Chinese = "思", Example = "思考" },
         new PinyinItem { Pinyin = "y", Chinese = "衣", Example = "衣服" },
         new PinyinItem { Pinyin = "w", Chinese = "乌", Example = "乌鸦" }
@@ -42,7 +44,8 @@ public partial class ChinesePinyinAlphabetPage : ContentPage
     private List<PinyinItem> _singleVowels = new()
     {
         new PinyinItem { Pinyin = "a", Chinese = "啊", Example = "啊呀" },
-        new PinyinItem { Pinyin = "o", Chinese = "喔", Example = "喔喔" },
+        // "噢"为单音字恒读 ō；原"喔"有 ō/wō 两读，易被 TTS 误读为 wō
+        new PinyinItem { Pinyin = "o", Chinese = "噢", Example = "喔喔" },
         new PinyinItem { Pinyin = "e", Chinese = "鹅", Example = "天鹅" },
         new PinyinItem { Pinyin = "i", Chinese = "衣", Example = "衣服" },
         new PinyinItem { Pinyin = "u", Chinese = "乌", Example = "乌云" },
@@ -53,7 +56,7 @@ public partial class ChinesePinyinAlphabetPage : ContentPage
     private List<PinyinItem> _compoundVowels = new()
     {
         new PinyinItem { Pinyin = "ai", Chinese = "哀", Example = "悲哀" },
-        new PinyinItem { Pinyin = "ei", Chinese = "诶", Example = "诶呀" },
+        new PinyinItem { Pinyin = "ei", Chinese = "诶", Example = "诶呀" },  // 多音 ēi/éi/ěi/èi：无单音同音字可替，保持原字
         new PinyinItem { Pinyin = "ui", Chinese = "威", Example = "威风" },
         new PinyinItem { Pinyin = "ao", Chinese = "熬", Example = "熬夜" },
         new PinyinItem { Pinyin = "ou", Chinese = "欧", Example = "欧洲" },
@@ -80,7 +83,8 @@ public partial class ChinesePinyinAlphabetPage : ContentPage
         new PinyinItem { Pinyin = "shi", Chinese = "狮", Example = "狮子" },
         new PinyinItem { Pinyin = "ri", Chinese = "日", Example = "日子" },
         new PinyinItem { Pinyin = "zi", Chinese = "资", Example = "资本" },
-        new PinyinItem { Pinyin = "ci", Chinese = "次", Example = "次数" },
+        // 整体认读 ci 读 cī（一声），非 cì。用"疵"与声母 c 的"雌"区分
+        new PinyinItem { Pinyin = "ci", Chinese = "疵", Example = "次数" },
         new PinyinItem { Pinyin = "si", Chinese = "丝", Example = "丝绸" },
         new PinyinItem { Pinyin = "yi", Chinese = "衣", Example = "衣服" },
         new PinyinItem { Pinyin = "wu", Chinese = "屋", Example = "房屋" },
