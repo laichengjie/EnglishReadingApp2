@@ -647,4 +647,118 @@ public partial class ChinesePoetryPage : ContentPage
             await DisplayAlert("提示", "已经是最后一首了", "确定");
         }
     }
+
+    /// <summary>
+    /// 右上角"目录"按钮：重建列表后显示弹层。
+    /// 每次打开都重建，保证"当前正在阅读的一首"的高亮是最新的。
+    /// </summary>
+    private void OnCatalogClicked(object sender, EventArgs e)
+    {
+        BuildCatalogList();
+        CatalogOverlay.IsVisible = true;
+    }
+
+    /// <summary>
+    /// 关闭目录弹层（点击遮罩空白处或右上角 ✕）。
+    /// </summary>
+    private void OnCloseCatalogClicked(object? sender, EventArgs? e)
+    {
+        CatalogOverlay.IsVisible = false;
+    }
+
+    /// <summary>
+    /// 构建目录列表：每项为"序号 + 诗名 + 作者"，当前正在阅读的一首高亮。
+    /// </summary>
+    private void BuildCatalogList()
+    {
+        CatalogList.Children.Clear();
+        if (_poetryList == null || _poetryList.Count == 0) return;
+
+        for (int i = 0; i < _poetryList.Count; i++)
+        {
+            var item = _poetryList[i];
+            int index = i;                      // 闭包捕获循环变量，需先拷到局部变量
+            bool isCurrent = index == _currentIndex;
+
+            var numberLabel = new Label
+            {
+                Text = $"{index + 1}",
+                FontSize = 14,
+                TextColor = isCurrent ? Color.FromArgb("#E67E22") : Color.FromArgb("#95A5A6"),
+                FontAttributes = isCurrent ? FontAttributes.Bold : FontAttributes.None,
+                WidthRequest = 28,
+                HorizontalTextAlignment = TextAlignment.Center,
+                VerticalOptions = LayoutOptions.Center
+            };
+
+            var titleLabel = new Label
+            {
+                Text = item.Title,
+                FontSize = 17,
+                TextColor = isCurrent ? Color.FromArgb("#E67E22") : Color.FromArgb("#2C3E50"),
+                FontAttributes = isCurrent ? FontAttributes.Bold : FontAttributes.None,
+                VerticalOptions = LayoutOptions.Center,
+                LineBreakMode = LineBreakMode.TailTruncation
+            };
+
+            var authorLabel = new Label
+            {
+                Text = item.Author,
+                FontSize = 13,
+                TextColor = Color.FromArgb("#7F8C8D"),
+                VerticalOptions = LayoutOptions.Center,
+                HorizontalOptions = LayoutOptions.End
+            };
+
+            var row = new Grid
+            {
+                Padding = new Thickness(10, 12),
+                ColumnSpacing = 8,
+                BackgroundColor = isCurrent ? Color.FromArgb("#FFF3E0") : Colors.Transparent,
+                ColumnDefinitions =
+                {
+                    new ColumnDefinition(GridLength.Auto),
+                    new ColumnDefinition(GridLength.Star),
+                    new ColumnDefinition(GridLength.Auto)
+                }
+            };
+
+            Grid.SetColumn(numberLabel, 0);
+            Grid.SetColumn(titleLabel, 1);
+            Grid.SetColumn(authorLabel, 2);
+            row.Children.Add(numberLabel);
+            row.Children.Add(titleLabel);
+            row.Children.Add(authorLabel);
+
+            var tap = new TapGestureRecognizer();
+            tap.Tapped += (s, e) => SelectPoetry(index);
+            row.GestureRecognizers.Add(tap);
+
+            CatalogList.Children.Add(row);
+
+            // 各项之间加分隔线（最后一项之后不加）
+            if (index < _poetryList.Count - 1)
+            {
+                CatalogList.Children.Add(new BoxView
+                {
+                    HeightRequest = 1,
+                    Color = Color.FromArgb("#F0F0F0")
+                });
+            }
+        }
+    }
+
+    /// <summary>
+    /// 从目录选中第 index 首：关闭弹层、中断正在进行的朗读，然后显示该首。
+    /// </summary>
+    private void SelectPoetry(int index)
+    {
+        if (_poetryList == null || index < 0 || index >= _poetryList.Count) return;
+
+        CatalogOverlay.IsVisible = false;
+        CancelSpeech();
+
+        _currentIndex = index;
+        DisplayCurrentPoetry();
+    }
 }
