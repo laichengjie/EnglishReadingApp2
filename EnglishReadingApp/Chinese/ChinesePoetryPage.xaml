@@ -17,28 +17,15 @@
                              BackgroundColor="#8B4513" 
                              Padding="20,15"
                              Spacing="5">
-            <Label Text="📜 古诗词学习" 
-                   FontSize="22" 
-                   FontAttributes="Bold"
-                   TextColor="White"
-                   HorizontalOptions="Center"/>
-            <Label Text="诵读经典 · 传承文化" 
-                   FontSize="13" 
-                   TextColor="White"
-                   Opacity="0.9"
-                   HorizontalOptions="Center"/>
+
+            <BoxView HeightRequest="1" Color="#8B4513"/>
         </VerticalStackLayout>
 
         <!-- 主内容区域 -->
         <ScrollView Grid.Row="1">
             <VerticalStackLayout Spacing="12" Padding="20">
 
-                <!-- 进度指示 -->
-                <Label x:Name="ProgressLabel" 
-                       Text="第 1 / 10 首" 
-                       FontSize="14"
-                       TextColor="#666"
-                       HorizontalOptions="Center"/>
+
 
                 <!-- 诗词卡片 -->
                 <Frame CornerRadius="15"

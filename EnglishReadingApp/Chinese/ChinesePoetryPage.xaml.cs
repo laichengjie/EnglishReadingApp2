@@ -157,7 +157,7 @@ public partial class ChinesePoetryPage : ContentPage
             translationFrame.IsVisible = _showTranslation;
         }
 
-        ProgressLabel.Text = $"第 {_currentIndex + 1} / {_poetryList.Count} 首";
+        
         ResultFrame.IsVisible = false;
     }
 
@@ -299,27 +299,39 @@ public partial class ChinesePoetryPage : ContentPage
                 Pitch = 1.0f
             };
 
-            // 依次朗读：诗名 → 时代 → 作者 → 诗文
+            // 注：MAUI 9 的 SpeechOptions 尚不支持 Rate（语速）属性，
+            // Android 端语速偏快的问题，此处通过下方"诗文逐行朗读"增加句间停顿来缓解
+
+            // 依次朗读：诗名 → 时代 → 作者
             var segments = new (string Label, string Text)[]
             {
                 ("诗名", item.Title),
                 ("时代", item.Dynasty),
-                ("作者", item.Author),
-                ("诗文", item.Content)
+                ("作者", item.Author)
             };
 
             foreach (var segment in segments)
             {
                 if (string.IsNullOrWhiteSpace(segment.Text)) continue;
 
-                var preview = segment.Text.Replace('\n', ' ');
-                if (preview.Length > 12) preview = preview.Substring(0, 12) + "…";
-
-                StatusLabel.Text = $"🔊 正在朗读{segment.Label}：{preview}";
+                StatusLabel.Text = $"🔊 正在朗读{segment.Label}：{segment.Text}";
                 await TextToSpeech.Default.SpeakAsync(segment.Text, options);
 
                 // 段落之间稍作停顿，听感更自然
                 await Task.Delay(300);
+            }
+
+            // 诗文按行朗读：整段 Content 含换行符，Android 端会忽略换行连读导致听感急促，
+            // 逐行朗读可在 Android 上也保留换行处的停顿
+            var lines = item.Content.Split('\n', StringSplitOptions.RemoveEmptyEntries);
+            foreach (var line in lines)
+            {
+                var trimmed = line.Trim();
+                if (string.IsNullOrEmpty(trimmed)) continue;
+
+                StatusLabel.Text = $"🔊 正在朗读诗文：{trimmed}";
+                await TextToSpeech.Default.SpeakAsync(trimmed, options);
+                await Task.Delay(250);
             }
 
             StatusLabel.Text = "播放完成";
