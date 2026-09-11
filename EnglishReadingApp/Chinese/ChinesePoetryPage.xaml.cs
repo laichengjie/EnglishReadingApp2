@@ -110,20 +110,32 @@ public partial class ChinesePoetryPage : ContentPage
 
         var item = _poetryList[_currentIndex];
 
-        TitleLabel.Text = item.Title;
-        AuthorLabel.Text = item.Author;
-        DynastyLabel.Text = item.Dynasty;
         TranslationLabel.Text = item.Translation;
 
+        // 诗名（26pt，点击朗读诗名）
+        TitlePinyinLayout.Children.Clear();
+        TitlePinyinLayout.Children.Add(BuildPinyinRow(
+            item.Title, item.TitlePinyin, 26, 13,
+            Color.FromArgb("#2C3E50"), item.Title));
+
+        // 作者（16pt，点击朗读作者）
+        AuthorPinyinLayout.Children.Clear();
+        AuthorPinyinLayout.Children.Add(BuildPinyinRow(
+            item.Author, item.AuthorPinyin, 16, 11,
+            Color.FromArgb("#2C3E50"), item.Author));
+
+        // 朝代（16pt，点击朗读朝代）
+        DynastyPinyinLayout.Children.Clear();
+        DynastyPinyinLayout.Children.Add(BuildPinyinRow(
+            item.Dynasty, item.DynastyPinyin, 16, 11,
+            Color.FromArgb("#2C3E50"), item.Dynasty));
+
+        // 诗词正文（30pt，点击朗读整句）
         ContentLayout.Children.Clear();
         var pinyinLines = item.GetPinyinLines();
 
         foreach (var line in pinyinLines)
         {
-            var pinyinWords = line.Pinyin.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            var chineseChars = line.Chinese.ToCharArray();
-            int charCount = chineseChars.Length;
-
             // 使用 StackLayout 让每一行独立
             var lineContainer = new VerticalStackLayout
             {
@@ -132,72 +144,10 @@ public partial class ChinesePoetryPage : ContentPage
                 Margin = new Thickness(0, 4)
             };
 
-            // 拼音行
-            var pinyinRow = new HorizontalStackLayout
-            {
-                Spacing = 4,
-                HorizontalOptions = LayoutOptions.Center
-            };
+            lineContainer.Children.Add(BuildPinyinRow(
+                line.Chinese, line.Pinyin, 30, 14,
+                Color.FromArgb("#2C3E50"), line.Chinese));
 
-            // 汉字行
-            var chineseRow = new HorizontalStackLayout
-            {
-                Spacing = 4,
-                HorizontalOptions = LayoutOptions.Center
-            };
-
-            for (int i = 0; i < charCount; i++)
-            {
-                // 每个字作为一个独立的列
-                var charContainer = new VerticalStackLayout
-                {
-                    HorizontalOptions = LayoutOptions.Center,
-                    Spacing = 2,
-                    WidthRequest = 55,
-                    Margin = new Thickness(0)
-                };
-
-                // 拼音（如果存在）
-                string pinyin = (i < pinyinWords.Length) ? pinyinWords[i] : "";
-                var pinyinLabel = new Label
-                {
-                    Text = pinyin,
-                    FontSize = 14,
-                    FontAttributes = FontAttributes.Bold,
-                    TextColor = Color.FromArgb("2C3E50"),
-                    HorizontalOptions = LayoutOptions.Center,
-                    HorizontalTextAlignment = TextAlignment.Center
-                };
-
-                // 点击拼音朗读整句
-                var tapPinyin = new TapGestureRecognizer();
-                tapPinyin.Tapped += async (s, e) => await SpeakText(line.Chinese);
-                pinyinLabel.GestureRecognizers.Add(tapPinyin);
-
-                // 汉字
-                var chineseLabel = new Label
-                {
-                    Text = chineseChars[i].ToString(),
-                    FontSize = 30,
-                    FontAttributes = FontAttributes.Bold,
-                    TextColor = Color.FromArgb("#2C3E50"),
-                    HorizontalOptions = LayoutOptions.Center,
-                    HorizontalTextAlignment = TextAlignment.Center
-                };
-
-                var tapChinese = new TapGestureRecognizer();
-                tapChinese.Tapped += async (s, e) => await SpeakText(line.Chinese);
-                chineseLabel.GestureRecognizers.Add(tapChinese);
-
-                // 添加到每个字的容器中
-                charContainer.Children.Add(pinyinLabel);
-                charContainer.Children.Add(chineseLabel);
-
-                // 添加到行
-                pinyinRow.Children.Add(charContainer);
-            }
-
-            lineContainer.Children.Add(pinyinRow);
             ContentLayout.Children.Add(lineContainer);
         }
 
@@ -209,6 +159,103 @@ public partial class ChinesePoetryPage : ContentPage
 
         ProgressLabel.Text = $"第 {_currentIndex + 1} / {_poetryList.Count} 首";
         ResultFrame.IsVisible = false;
+    }
+
+    /// <summary>
+    /// 构建一行"逐字拼音"：每个汉字一个纵向单元（上拼音、下汉字），整行居中。
+    /// 诗名、作者、朝代与诗词正文共用此方法，保证视觉与交互一致。
+    /// </summary>
+    /// <param name="chinese">汉字串，如 "静夜思"</param>
+    /// <param name="pinyin">空格分隔的带声调拼音，如 "jìng yè sī"；转换失败时等于 chinese</param>
+    /// <param name="charFontSize">汉字字号（诗名 26 / 作者·朝代 16 / 正文 30）</param>
+    /// <param name="pinyinFontSize">拼音字号（诗名 13 / 作者·朝代 11 / 正文 14）</param>
+    /// <param name="textColor">文字颜色</param>
+    /// <param name="speakText">点击时朗读的文本；为 null 或空白则不绑定手势</param>
+    private HorizontalStackLayout BuildPinyinRow(
+        string chinese,
+        string pinyin,
+        double charFontSize,
+        double pinyinFontSize,
+        Color textColor,
+        string? speakText)
+    {
+        var row = new HorizontalStackLayout
+        {
+            Spacing = 4,
+            HorizontalOptions = LayoutOptions.Center,
+            VerticalOptions = LayoutOptions.Center
+        };
+
+        if (string.IsNullOrEmpty(chinese)) return row;
+
+        // 降级保护：转换失败时 pinyin 等于原中文，此时不能再把汉字当拼音显示一遍
+        bool pinyinValid = !string.IsNullOrEmpty(pinyin) && pinyin != chinese;
+        var pinyinWords = pinyinValid
+            ? pinyin.Split(' ', StringSplitOptions.RemoveEmptyEntries)
+            : Array.Empty<string>();
+
+        var chineseChars = chinese.ToCharArray();
+        bool canSpeak = !string.IsNullOrWhiteSpace(speakText);
+
+        for (int i = 0; i < chineseChars.Length; i++)
+        {
+            string charPinyin = i < pinyinWords.Length ? pinyinWords[i] : "";
+
+            // 宽度取"汉字"与"拼音"所需宽度的较大者，避免较长的拼音被挤压
+            double width = Math.Max(
+                charFontSize * 1.8,
+                charPinyin.Length * pinyinFontSize * 0.62);
+
+            var charContainer = new VerticalStackLayout
+            {
+                HorizontalOptions = LayoutOptions.Center,
+                VerticalOptions = LayoutOptions.Center,
+                Spacing = 2,
+                WidthRequest = width,
+                Margin = new Thickness(0)
+            };
+
+            var pinyinLabel = new Label
+            {
+                Text = charPinyin,
+                FontSize = pinyinFontSize,
+                FontAttributes = FontAttributes.Bold,
+                TextColor = textColor,
+                HorizontalOptions = LayoutOptions.Center,
+                HorizontalTextAlignment = TextAlignment.Center
+            };
+
+            var chineseLabel = new Label
+            {
+                Text = chineseChars[i].ToString(),
+                FontSize = charFontSize,
+                FontAttributes = FontAttributes.Bold,
+                TextColor = textColor,
+                HorizontalOptions = LayoutOptions.Center,
+                HorizontalTextAlignment = TextAlignment.Center
+            };
+
+            // 点击拼音或汉字朗读对应文字
+            if (canSpeak)
+            {
+                string textToSpeak = speakText!;
+
+                var tapPinyin = new TapGestureRecognizer();
+                tapPinyin.Tapped += async (s, e) => await SpeakText(textToSpeak);
+                pinyinLabel.GestureRecognizers.Add(tapPinyin);
+
+                var tapChinese = new TapGestureRecognizer();
+                tapChinese.Tapped += async (s, e) => await SpeakText(textToSpeak);
+                chineseLabel.GestureRecognizers.Add(tapChinese);
+            }
+
+            charContainer.Children.Add(pinyinLabel);
+            charContainer.Children.Add(chineseLabel);
+
+            row.Children.Add(charContainer);
+        }
+
+        return row;
     }
 
     private async Task SpeakText(string text)
@@ -245,13 +292,35 @@ public partial class ChinesePoetryPage : ContentPage
         {
             LoadingIndicator.IsVisible = true;
             LoadingIndicator.IsRunning = true;
-            StatusLabel.Text = "正在播放整首诗...";
 
-            await TextToSpeech.Default.SpeakAsync(item.Content, new SpeechOptions
+            var options = new SpeechOptions
             {
                 Volume = 1.0f,
                 Pitch = 1.0f
-            });
+            };
+
+            // 依次朗读：诗名 → 时代 → 作者 → 诗文
+            var segments = new (string Label, string Text)[]
+            {
+                ("诗名", item.Title),
+                ("时代", item.Dynasty),
+                ("作者", item.Author),
+                ("诗文", item.Content)
+            };
+
+            foreach (var segment in segments)
+            {
+                if (string.IsNullOrWhiteSpace(segment.Text)) continue;
+
+                var preview = segment.Text.Replace('\n', ' ');
+                if (preview.Length > 12) preview = preview.Substring(0, 12) + "…";
+
+                StatusLabel.Text = $"🔊 正在朗读{segment.Label}：{preview}";
+                await TextToSpeech.Default.SpeakAsync(segment.Text, options);
+
+                // 段落之间稍作停顿，听感更自然
+                await Task.Delay(300);
+            }
 
             StatusLabel.Text = "播放完成";
         }

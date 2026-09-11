@@ -47,25 +47,24 @@
                        Padding="20">
                     <VerticalStackLayout Spacing="12">
 
-                        <!-- 标题 -->
-                        <Label x:Name="TitleLabel" 
-                               Text="静夜思" 
-                               FontSize="26" 
-                               FontAttributes="Bold"
-                               TextColor="#2C3E50"
-                               HorizontalOptions="Center"/>
+                        <!-- 标题（逐字拼音，由代码动态生成） -->
+                        <HorizontalStackLayout x:Name="TitlePinyinLayout"
+                                               HorizontalOptions="Center"/>
 
-                        <!-- 作者信息 -->
-                        <HorizontalStackLayout Spacing="10" HorizontalOptions="Center">
-                            <Label x:Name="AuthorLabel" 
-                                   Text="李白" 
-                                   FontSize="16"
-                                   TextColor="#7F8C8D"/>
-                            <Label Text="·" FontSize="16" TextColor="#7F8C8D"/>
-                            <Label x:Name="DynastyLabel" 
-                                   Text="唐代" 
-                                   FontSize="16"
-                                   TextColor="#7F8C8D"/>
+                        <!-- 作者信息（逐字拼音，由代码动态生成） -->
+                        <HorizontalStackLayout Spacing="10" 
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center">
+                            <HorizontalStackLayout x:Name="DynastyPinyinLayout"
+                       VerticalOptions="Center"/>
+
+                            <Label Text="·" 
+                                   FontSize="16" 
+                                   TextColor="#7F8C8D"
+                                   VerticalOptions="Center"/>
+                            <HorizontalStackLayout x:Name="AuthorPinyinLayout"
+                       VerticalOptions="Center"/>
+
                         </HorizontalStackLayout>
 
                         <!-- 分隔线 -->

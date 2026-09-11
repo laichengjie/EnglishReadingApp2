@@ -14,6 +14,21 @@ namespace EnglishReadingApp.Entity
         public string Content { get; set; } = "";
         public string Translation { get; set; } = "";
 
+        /// <summary>
+        /// 诗名拼音（带声调符号，如 "jìng yè sī"）。转换失败时返回原中文。
+        /// </summary>
+        public string TitlePinyin => GetPinyinWithToneSymbol(Title);
+
+        /// <summary>
+        /// 作者拼音（带声调符号，如 "lǐ bái"）。转换失败时返回原中文。
+        /// </summary>
+        public string AuthorPinyin => GetPinyinWithToneSymbol(Author);
+
+        /// <summary>
+        /// 朝代拼音（带声调符号，如 "táng dài"）。转换失败时返回原中文。
+        /// </summary>
+        public string DynastyPinyin => GetPinyinWithToneSymbol(Dynasty);
+
         public List<PinyinLine> GetPinyinLines()
         {
             var result = new List<PinyinLine>();
@@ -38,7 +53,7 @@ namespace EnglishReadingApp.Entity
         /// <summary>
         /// 使用 ChinesePinyinConverter 获取拼音并转换为声调符号
         /// </summary>
-        private string GetPinyinWithToneSymbol(string chinese)
+        public string GetPinyinWithToneSymbol(string chinese)
         {
             try
             {
@@ -48,8 +63,13 @@ namespace EnglishReadingApp.Entity
                 if (pinyinList == null || !pinyinList.Any())
                     return chinese;
 
+                // 多音字覆盖：修正拼音库在特定语境下的误读
+                // （如"瀑布"的"瀑"库给 bào，正确应为 pù）
+                var syllables = pinyinList.ToList();
+                PolyphonicPinyin.Apply(chinese, syllables);
+
                 // 将列表转为字符串，如 "chun1 mian2 bu2 jiao4 xiao3"
-                string pinyinWithNumber = string.Join(" ", pinyinList);
+                string pinyinWithNumber = string.Join(" ", syllables);
 
                 // 将数字声调转换为声调符号
                 return ConvertNumberToToneMark(pinyinWithNumber);
