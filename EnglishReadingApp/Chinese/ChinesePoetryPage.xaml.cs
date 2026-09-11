@@ -10,6 +10,9 @@ public partial class ChinesePoetryPage : ContentPage
     private int _currentIndex = 0;
     private bool _showTranslation = false;
 
+    // 当前朗读任务的取消源；切换诗词或点击单字朗读时，用它中断上一次未读完的朗读
+    private CancellationTokenSource? _speechCts;
+
     public ChinesePoetryPage()
     {
         InitializeComponent();
@@ -413,8 +416,39 @@ public partial class ChinesePoetryPage : ContentPage
         return row;
     }
 
+    /// <summary>
+    /// 中断当前正在进行的朗读。
+    /// 被中断的朗读任务会走 OperationCanceledException 分支静默结束，不会弹出错误提示。
+    /// </summary>
+    private void CancelSpeech()
+    {
+        // 原子地"取出并清空"字段。
+        // 注意：Cancel() 会同步触发被取消任务的延续，而延续里的 finally 可能重入本方法；
+        // 先把字段摘空，既能保证只处理一次，后续也只操作局部变量，不会空引用。
+        var cts = Interlocked.Exchange(ref _speechCts, null);
+        if (cts == null) return;
+
+        cts.Cancel();
+        cts.Dispose();
+    }
+
+    /// <summary>
+    /// 先中断上一次未读完的朗读，再为本次朗读创建新的取消源。
+    /// 切歌、点击"听全诗"、点击单字朗读都会调用，保证同一时刻只有一路朗读在播放。
+    /// </summary>
+    private CancellationTokenSource RestartSpeech()
+    {
+        CancelSpeech();
+        var cts = new CancellationTokenSource();
+        _speechCts = cts;
+        return cts;
+    }
+
     private async Task SpeakText(string text)
     {
+        // 点击单字朗读时，同样要中断正在播放的全诗
+        var cts = RestartSpeech();
+
         try
         {
             LoadingIndicator.IsVisible = true;
@@ -425,7 +459,11 @@ public partial class ChinesePoetryPage : ContentPage
             {
                 Volume = 1.0f,
                 Pitch = 1.0f
-            });
+            }, cts.Token);
+        }
+        catch (OperationCanceledException)
+        {
+            // 被切歌或新的朗读打断，属正常流程，无需提示
         }
         catch (Exception ex)
         {
@@ -434,14 +472,28 @@ public partial class ChinesePoetryPage : ContentPage
         }
         finally
         {
-            LoadingIndicator.IsVisible = false;
-            LoadingIndicator.IsRunning = false;
-            StatusLabel.Text = "点击听全诗或跟读";
+            // 只有仍是"当前"朗读任务才复位 UI，
+            // 否则旧任务收尾时会把新任务刚点亮的转圈指示器关掉
+            if (!cts.IsCancellationRequested)
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsRunning = false;
+                StatusLabel.Text = "点击听全诗或跟读";
+            }
+
+            // 原子地"是我就摘掉"，避免 check-then-act 竞态导致的空引用或重复释放
+            if (Interlocked.CompareExchange(ref _speechCts, null, cts) == cts)
+            {
+                cts.Dispose();
+            }
         }
     }
 
-    private async void OnListenFullClicked(object sender, EventArgs e)
+    private async void OnListenFullClicked(object? sender, EventArgs? e)
     {
+        // 中断上一首（或上一次点击）未读完的朗读，再开始本次播放
+        var cts = RestartSpeech();
+
         var item = _poetryList[_currentIndex];
         try
         {
@@ -470,10 +522,10 @@ public partial class ChinesePoetryPage : ContentPage
                 if (string.IsNullOrWhiteSpace(segment.Text)) continue;
 
                 StatusLabel.Text = $"🔊 正在朗读{segment.Label}：{segment.Text}";
-                await TextToSpeech.Default.SpeakAsync(segment.Text, options);
+                await TextToSpeech.Default.SpeakAsync(segment.Text, options, cts.Token);
 
                 // 段落之间稍作停顿，听感更自然
-                await Task.Delay(300);
+                await Task.Delay(300, cts.Token);
             }
 
             // 诗文按行朗读：整段 Content 含换行符，Android 端会忽略换行连读导致听感急促，
@@ -485,11 +537,15 @@ public partial class ChinesePoetryPage : ContentPage
                 if (string.IsNullOrEmpty(trimmed)) continue;
 
                 StatusLabel.Text = $"🔊 正在朗读诗文：{trimmed}";
-                await TextToSpeech.Default.SpeakAsync(trimmed, options);
-                await Task.Delay(250);
+                await TextToSpeech.Default.SpeakAsync(trimmed, options, cts.Token);
+                await Task.Delay(250, cts.Token);
             }
 
             StatusLabel.Text = "播放完成";
+        }
+        catch (OperationCanceledException)
+        {
+            // 被切歌或新的朗读打断，属正常流程，无需提示
         }
         catch (Exception ex)
         {
@@ -498,10 +554,20 @@ public partial class ChinesePoetryPage : ContentPage
         }
         finally
         {
-            LoadingIndicator.IsVisible = false;
-            LoadingIndicator.IsRunning = false;
-            await Task.Delay(500);
-            StatusLabel.Text = "点击听全诗或跟读";
+            // 已作废的旧播放任务不再改动 UI，避免把新任务刚点亮的指示器关掉
+            if (!cts.IsCancellationRequested)
+            {
+                LoadingIndicator.IsVisible = false;
+                LoadingIndicator.IsRunning = false;
+                await Task.Delay(500);
+                StatusLabel.Text = "点击听全诗或跟读";
+            }
+
+            // 原子地"是我就摘掉"，避免 check-then-act 竞态导致的空引用或重复释放
+            if (Interlocked.CompareExchange(ref _speechCts, null, cts) == cts)
+            {
+                cts.Dispose();
+            }
         }
     }
 
@@ -551,6 +617,9 @@ public partial class ChinesePoetryPage : ContentPage
     {
         if (_currentIndex > 0)
         {
+            // 切换诗词前先中断当前未读完的朗读
+            CancelSpeech();
+
             _currentIndex--;
             DisplayCurrentPoetry();
         }
@@ -564,8 +633,13 @@ public partial class ChinesePoetryPage : ContentPage
     {
         if (_currentIndex < _poetryList.Count - 1)
         {
+            // 先把上一首没读完的朗读中断，再切歌
+            CancelSpeech();
+
             _currentIndex++;
             DisplayCurrentPoetry();
+
+            // 立即开始朗读新的一首
             OnListenFullClicked(null, null); 
         }
         else
