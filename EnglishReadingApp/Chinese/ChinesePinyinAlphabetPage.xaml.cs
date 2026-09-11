@@ -5,7 +5,7 @@ namespace EnglishReadingApp;
 
 public partial class ChinesePinyinAlphabetPage : ContentPage
 {
-    private readonly QwenTTSService _qwenTTS;
+
     private Dictionary<PinyinItem, View> _buttonMap = new();
     private CancellationTokenSource? _cancellationTokenSource;
     private bool _isReading = false;
@@ -100,7 +100,6 @@ public partial class ChinesePinyinAlphabetPage : ContentPage
     public ChinesePinyinAlphabetPage()
     {
         InitializeComponent();
-        _qwenTTS = new QwenTTSService();
         CreatePinyinButtons();
 
         // 页面消失时取消朗读

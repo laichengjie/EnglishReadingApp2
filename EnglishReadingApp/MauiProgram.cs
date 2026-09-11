@@ -26,9 +26,6 @@ public static class MauiProgram
         builder.Services.AddTransient<ChinesePinyinAlphabetPage>();
         builder.Services.AddTransient<EnglishPage>();            
         builder.Services.AddTransient<MathPage>();
-
-        builder.Services.AddSingleton(new QwenTTSService());
-
         // 可选：注册其他服务
         builder.Services.AddSingleton<IAudioManager>(AudioManager.Current);
 
